@@ -1,16 +1,27 @@
 {
-  "autoload": {
-    "psr-4": {
-      "efrisLib\\": "src"
+    "name": "sniper/efris-lib",
+    "description": "PHP Library for EFRIS system to system integration",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sniper\\EfrisLib\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Omega Jean Emmy",
+            "email": "omegaemmy@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "illuminate/support": "v9.51.0",
+        "ext-openssl": "*",
+        "ext-dom": "*",
+        "tcdent/php-restclient": "0.1.8.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "10.0.18"
     }
-  },
-  "require": {
-    "illuminate/support": "v9.51.0",
-    "ext-openssl": "*",
-    "ext-dom": "*",
-    "tcdent/php-restclient": "0.1.8.2"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "10.0.18"
-  }
 }
