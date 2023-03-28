@@ -1,6 +1,5 @@
 <?php
 namespace Sniper\EfrisLib;
-require(__DIR__ . "/../vendor/autoload.php");
 
 use JsonMapper;
 use JsonMapper_Exception;
