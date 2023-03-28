@@ -1,64 +1,42 @@
 <?php
-
-use Illuminate\Support\Arr;
-
+namespace Sniper\EfrisLib;
 class Crypto
 {
     private const cipherAlgorithm = "aes-128-ecb";
-    private static string $privateKeyPath;
-    private static string $privateKeyPassword;
+    public static string $privateKeyPath;
+    public static string $privateKeyPassword;
 
-    /**
-     * @return string
-     */
-    public static function getPrivateKeyPath(): string
-    {
-        return self::$privateKeyPath;
-    }
 
-    /**
-     * @param string $privateKeyPath
-     */
-    public static function setPrivateKeyPath(string $privateKeyPath): void
+    private static function getPrivateKey(): mixed
     {
-        self::$privateKeyPath = $privateKeyPath;
+        $cert_store = file_get_contents(Crypto::$privateKeyPath);
+        $isRead = openssl_pkcs12_read($cert_store, $cert_info, Crypto::$privateKeyPassword);
+        return $cert_info['pkey'];
     }
-
-    /**
-     * @return string
-     */
-    public static function getPrivateKeyPassword(): string
+    public static function rsaDecrypt($encryptedData): string
     {
-        return self::$privateKeyPassword;
-    }
-
-    /**
-     * @param string $privateKeyPassword
-     */
-    public static function setPrivateKeyPassword(string $privateKeyPassword): void
-    {
-        self::$privateKeyPassword = $privateKeyPassword;
-    }
-    private function getPrivateKey(): mixed
-    {
-        $cert_store = file_get_contents($this::$privateKeyPath);
-        $isRead = openssl_pkcs12_read($cert_store, $cert_info, $this::$privateKeyPassword);
-        return Arr::get($cert_info, "pkey");
-    }
-    static function rsaDecrypt($encryptedData): string
-    {
-        openssl_private_decrypt($encryptedData, $decryptedData, Crypto::getPrivateKey(), OPENSSL_PKCS1_PADDING);
+        $privateKey = self::getPrivateKey();
+        openssl_private_decrypt($encryptedData, $decryptedData, $privateKey, OPENSSL_PKCS1_PADDING);
         return $decryptedData;
     }
 
-    static function aesEncrypt(string $data, string $aesKey): bool|string
+    public static function aesEncrypt(string $data, string $aesKey): bool|string
     {
         return openssl_encrypt($data, Crypto::cipherAlgorithm, $aesKey);
     }
 
-    static function aesDecrypt(string $encryptedData, string $aesKey): bool|string
+    public static function aesDecrypt(string $encryptedData, string $aesKey): bool|string
     {
         return openssl_decrypt($encryptedData, Crypto::cipherAlgorithm, $aesKey);
+    }
+
+    public static function rsaSign(string $data): bool|string
+    {
+        $pKey = Crypto::getPrivateKey();
+        $isSigned = openssl_sign($data, $signature, $pKey, OPENSSL_ALGO_SHA1);
+        if ($isSigned)
+            return $signature;
+        return false;
     }
 
 }

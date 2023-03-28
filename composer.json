@@ -19,7 +19,9 @@
         "illuminate/support": "v9.51.0",
         "ext-openssl": "*",
         "ext-dom": "*",
-        "tcdent/php-restclient": "0.1.8.2"
+        "tcdent/php-restclient": "0.1.8.2",
+        "ext-curl": "*",
+        "netresearch/jsonmapper": "v4.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "10.0.18"
