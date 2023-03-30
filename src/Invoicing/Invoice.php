@@ -4,9 +4,16 @@ namespace Sniper\EfrisLib\Invoicing;
 
 class Invoice
 {
-    public function __construct(public SellerDetails $sellerDetails, public BasicInformation $basicInformation,
-                                public BuyerDetails  $buyerDetails, public BuyerExtend $buyerExtend,
-                                public array         $goodsDetails)
+    public SellerDetails $sellerDetails;
+    public BasicInformation $basicInformation;
+    public BuyerDetails $buyerDetails;
+    public BuyerExtend $buyerExtend;
+    /**
+     * @var array<GoodDetails>
+     */
+    public array $goodsDetails;
+
+    public function __construct()
     {
     }
 }

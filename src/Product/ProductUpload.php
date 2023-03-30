@@ -2,7 +2,9 @@
 
 namespace Sniper\EfrisLib\Product;
 
-class Product
+use Sniper\EfrisLib\Builder;
+
+class ProductUpload extends Builder
 {
     public string $operationType = "101";
     public string $goodsName;
@@ -20,7 +22,13 @@ class Product
     public string $packageScaledValue;
     public string $pieceScaledValue;
     public string $exciseDutyCode;
-    public string $haveOtherUnit;
+    public string $haveOtherUnit = "102";
     public string $goodsTypeCode = "101";
+
+    /**
+     * @var array<GoodsOtherUnit>
+     */
     public array $goodsOtherUnits;
+
+
 }

@@ -2,7 +2,13 @@
 
 namespace Sniper\EfrisLib\Payload;
 
-class Payload
+use Sniper\EfrisLib\Builder;
+use Sniper\EfrisLib\Crypto;
+
+/**
+ * @template T of Payload
+ */
+class Payload extends Builder
 {
     public ReturnStateInfo $returnStateInfo;
     public Data $data;
@@ -12,12 +18,6 @@ class Payload
         $this->returnStateInfo = new ReturnStateInfo();
         $this->data = new Data();
     }
-
-    public static function builder():Payload
-    {
-        return new self();
-    }
-
 
     /**
      * @param ReturnStateInfo $returnStateInfo
@@ -52,4 +52,24 @@ class Payload
     }
 
 
+    public static function build(): Payload
+    {
+        return new self();
+    }
+
+    /**
+     * @param string $aesKey
+     * @return $this
+     */
+    public function encrypt(string $aesKey): Payload
+    {
+        $this->data->content = Crypto::aesEncrypt($this->data->content, $aesKey);
+        return $this;
+    }
+
+    public function decrypt(string $aesKey): Payload
+    {
+        $this->data->content = Crypto::aesDecrypt($this->data->content, $aesKey);
+        return $this;
+    }
 }
