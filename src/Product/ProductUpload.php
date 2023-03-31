@@ -26,9 +26,14 @@ class ProductUpload extends Builder
     public string $goodsTypeCode = "101";
 
     /**
-     * @var array<GoodsOtherUnit>
+     * @var $goodsOtherUnits array<GoodsOtherUnit>
      */
     public array $goodsOtherUnits;
+
+    public static function build(): ProductUpload
+    {
+        return new self();
+    }
 
 
 }

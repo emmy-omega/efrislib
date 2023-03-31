@@ -2,9 +2,9 @@
 
 namespace Sniper\EfrisLib\Response;
 
-use Sniper\EfrisLib\Product\ProductUpload;
+use Sniper\EfrisLib\Product\StockInItem;
 
-class ProductPartialUpload extends ProductUpload
+class MaintainResponse extends StockInItem
 {
     public string $returnCode;
     public string $returnMessage;

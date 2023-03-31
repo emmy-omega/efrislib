@@ -21,8 +21,6 @@
         "ext-dom": "*",
         "tcdent/php-restclient": "0.1.8.2",
         "ext-curl": "*",
-        "netresearch/jsonmapper": "v4.1.0",
-        "jms/serializer": "^3.23",
         "symfony/serializer": "^6.2",
         "symfony/property-access": "^6.2"
     },
