@@ -2,8 +2,6 @@
 
 namespace Sniper\EfrisLib;
 
-require __DIR__ . "/../vendor/autoload.php";
-
 use Sniper\EfrisLib\Payload\GlobalInfo;
 use Sniper\EfrisLib\Payload\Payload;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
