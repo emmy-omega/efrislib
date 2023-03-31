@@ -7,8 +7,8 @@ use Sniper\EfrisLib\Crypto;
 
 class Data
 {
+    public mixed $content = "";
     public string $signature = "";
-    public string $content = "";
     public DataDescription $dataDescription;
     public function __construct()
     {
@@ -24,7 +24,7 @@ class Data
      * @param string $content
      * @return $this
      */
-    public function content(string $content): Data
+    public function content(mixed $content): Data
     {
         $this->content = $content;
         return $this;
@@ -61,6 +61,7 @@ class Data
     public function encrypt(string $aesKey): Data
     {
         $this->content = Crypto::aesEncrypt($this->content, $aesKey);
+        $this->dataDescription->codeType("1")->encryptCode("2");
         return $this;
     }
 
