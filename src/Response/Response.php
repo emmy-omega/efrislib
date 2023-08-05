@@ -33,7 +33,7 @@ class Response
      * @param ReturnStateInfo $returnStateInfo
      * @return Response
      */
-    public function deturnStateInfo(ReturnStateInfo $returnStateInfo): Response
+    public function returnStateInfo(ReturnStateInfo $returnStateInfo): Response
     {
         $this->returnStateInfo = $returnStateInfo;
         return $this;

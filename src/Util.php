@@ -10,6 +10,7 @@ use Sniper\EfrisLib\Product\GoodsStockMaintain;
 use Sniper\EfrisLib\Product\Product;
 use Sniper\EfrisLib\Product\ProductQuery;
 use Sniper\EfrisLib\Product\ProductUpload;
+use Sniper\EfrisLib\Response\ProductQueryResponse;
 use Sniper\EfrisLib\Response\Response;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -22,17 +23,22 @@ class Util
     public static string $timeZone;
     public static string $tin;
     public static string $deviceNo;
-    public static string $aesKey;
 
     /**
      * @param mixed $content
      * @param string $interfaceCode
      * @return Response|bool
      */
-    public static function send(mixed $content, string $interfaceCode): Response|bool
+    public static function send(mixed $content, string $interfaceCode, $type, bool $encrypt = true): Response|bool
     {
-        $data = Data::builder()->content($content)->encrypt(Util::$aesKey)->sign();
-        $globalInfo = new GlobalInfo(Util::$tin, Util::$deviceNo, $interfaceCode);
+        $aesKey = null;
+        $data = Data::builder()->content($content);
+        if ($encrypt) {
+            $aesKey = self::getAESKey();
+            $data->encrypt($aesKey);
+        }
+        $data->sign();
+        $globalInfo = new GlobalInfo(self::$tin, self::$deviceNo, $interfaceCode);
         $payload = Payload::build()->data($data)->globalInfo($globalInfo);
 
         $curl = curl_init("https://efristest.ura.go.ug/efrisws/ws/taapp/getInformation");
@@ -45,7 +51,7 @@ class Util
         curl_close($curl);
         if ($response) {
             $payload = self::json_deserialize($response, Payload::class);
-            return self::extractResponse($payload, "array");
+            return self::extractResponse($payload, $type, $aesKey);
         }
         return false;
     }
@@ -55,9 +61,9 @@ class Util
      * @param $deviceNo
      * @return bool|string
      */
-    public static function getAESKey(): bool|string
+    private static function getAESKey(): bool|string
     {
-        $response = self::send("", "T104");
+        $response = self::send("", "T104", "string", false);
         if ($response)
             return $response->data;
         return $response;
@@ -68,7 +74,7 @@ class Util
      * @param string $type
      * @return mixed
      */
-    public static function json_deserialize(string $json, string $type):mixed
+    public static function json_deserialize(string $json, string $type): mixed
     {
         $encoders = [new JsonEncoder()];
         $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor())];
@@ -83,21 +89,23 @@ class Util
      * @param ProductUpload $products
      * @return Response
      */
-    public static function configureProduct(ProductUpload $productUpload): Response {
+    public static function configureProduct(ProductUpload $productUpload): Response
+    {
         return Util::send($productUpload->products, "T130");
     }
 
-    public static function queryProduct(string $pageSize="10", string $pageNo="1", $goodName=null, $goodsCode=null): Response
+    public static function queryProduct(string $pageSize = "10", string $pageNo = "1", $goodName = "", $goodsCode = ""): Response
     {
         $query = ProductQuery::build()->pageSize($pageSize)->pageNo($pageNo)->goodsName($goodName)->goodsCode($goodsCode);
-        return Util::send($query, "T127");
+        return Util::send($query, "T127", ProductQueryResponse::class, true);
     }
 
     /**
      * @param GoodsStockMaintain $goodsStockMaintain
      * @return Response
      */
-    public static function manageStock(GoodsStockMaintain $goodsStockMaintain): Response {
+    public static function manageStock(GoodsStockMaintain $goodsStockMaintain): Response
+    {
         $data = Data::builder()->content($goodsStockMaintain)->encrypt(Util::$aesKey)->sign();
         $globalInfo = new GlobalInfo(Util::$tin, Util::$deviceNo, "T130");
         $payload = Payload::build()->data($data)->globalInfo($globalInfo);
@@ -105,36 +113,32 @@ class Util
         return self::extractResponse($payload, "array");
     }
 
-    private static function fiscalizeInvoice(Invoice $invoice): Response {
-        $data = Data::builder()->content($invoice)->encrypt(Util::$aesKey)->sign();
-        $globalInfo = new GlobalInfo(Util::$tin, Util::$deviceNo, "T130");
-        $payload = Payload::build()->data($data)->globalInfo($globalInfo);
-        $payload = Util::send($payload);
-        return self::extractResponse($payload, "array");
+    public static function fiscalizeInvoice(Invoice $invoice): Response
+    {
+        return Util::send($invoice,"T108", "array", true);
     }
 
 
-    private static function extractResponse($payload, $type)
+    private static function extractResponse($payload, $type, $aesKey)
     {
-        $response = Response::builder()->returnStateInfo = $payload->returnStateInfo;
+        $response = Response::builder()->returnStateInfo($payload->returnStateInfo);
 //        check encryption stata
         $isEncrypted = $payload->data->dataDescription->codeType == "1";
         $encryptCode = $payload->data->dataDescription->encryptCode;
-
-        if ($isEncrypted)
-            if ($encryptCode == "2") {
-                $payload->data->decrtpy(Util::$aesKey);
-            } else {
-                $jsonContent = base64_decode($payload->data->content);
-                $passowrdDes = base64_decode(json_decode($jsonContent)->passowrdDes);
-                $response->data(base64_decode(Crypto::rsaDecrypt($passowrdDes)));
-                return $response;
-            }
+        if ($isEncrypted and $encryptCode == "2") {
+            if ($aesKey == null)
+                $aesKey = self::getAESKey();
+            $payload->data->decrypt($aesKey);
+        } else {
+            $jsonContent = base64_decode($payload->data->content);
+            $passowrdDes = base64_decode(json_decode($jsonContent)->passowrdDes);
+            $response->data(base64_decode(Crypto::rsaDecrypt($passowrdDes)));
+            return $response;
+        }
         $response->data(Util::json_deserialize($payload->data->content, $type));
 
         return $response;
     }
-
 }
 
 //Crypto::$privateKeyPath = "/home/sniper/certificates/private.p12";
