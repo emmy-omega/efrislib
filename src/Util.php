@@ -2,8 +2,15 @@
 
 namespace Sniper\EfrisLib;
 
+use Sniper\EfrisLib\Invoicing\Invoice;
+use Sniper\EfrisLib\Payload\Data;
 use Sniper\EfrisLib\Payload\GlobalInfo;
 use Sniper\EfrisLib\Payload\Payload;
+use Sniper\EfrisLib\Product\GoodsStockMaintain;
+use Sniper\EfrisLib\Product\Product;
+use Sniper\EfrisLib\Product\ProductQuery;
+use Sniper\EfrisLib\Product\ProductUpload;
+use Sniper\EfrisLib\Response\Response;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
@@ -13,13 +20,20 @@ use Symfony\Component\Serializer\Serializer;
 class Util
 {
     public static string $timeZone;
+    public static string $tin;
+    public static string $deviceNo;
+    public static string $aesKey;
 
     /**
      * @param Payload $payload
      * @return Payload|bool
      */
-    public static function send(Payload $payload): Payload|bool
+    public static function send(mixed $content, string $interfaceCode): Response|bool
     {
+        $data = Data::builder()->content($content)->encrypt(Util::$aesKey)->sign();
+        $globalInfo = new GlobalInfo(Util::$tin, Util::$deviceNo, $interfaceCode);
+        $payload = Payload::build()->data($data)->globalInfo($globalInfo);
+
         $curl = curl_init("https://efristest.ura.go.ug/efrisws/ws/taapp/getInformation");
         curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
         curl_setopt($curl, CURLOPT_POST, true);
@@ -28,8 +42,10 @@ class Util
 
         $response = curl_exec($curl);
         curl_close($curl);
-        if ($response)
-            return self::json_deserialize($response,Payload::class);
+        if ($response) {
+            $payload = self::json_deserialize($response, Payload::class);
+            return self::extractResponse($payload, "array");
+        }
         return false;
     }
 
@@ -63,6 +79,55 @@ class Util
             return $serializer->decode($json, 'json');
         return $serializer->deserialize($json, $type, 'json',
             [AbstractObjectNormalizer::SKIP_NULL_VALUES, AbstractObjectNormalizer::SKIP_UNINITIALIZED_VALUES]);
+    }
+
+    /**
+     * @param ProductUpload $products
+     * @return Response
+     */
+    public static function configureProduct(ProductUpload $productUpload): Response {
+        return Util::send($productUpload->products, "T130");
+    }
+
+    public static function queryProduct(string $pageSize="10", string $pageNo="1", $goodName=null, $goodsCode=null): Response
+    {
+        $query = ProductQuery::build()->pageSize($pageSize)->pageNo($pageNo)->goodsName($goodName)->goodsCode($goodsCode);
+        return Util::send($query, "T127");
+    }
+
+    /**
+     * @param GoodsStockMaintain $goodsStockMaintain
+     * @return Response
+     */
+    public static function manageStock(GoodsStockMaintain $goodsStockMaintain): Response {
+        $data = Data::builder()->content($goodsStockMaintain)->encrypt(Util::$aesKey)->sign();
+        $globalInfo = new GlobalInfo(Util::$tin, Util::$deviceNo, "T130");
+        $payload = Payload::build()->data($data)->globalInfo($globalInfo);
+        $payload = Util::send($payload);
+        return self::extractResponse($payload, "array");
+    }
+
+    private static function fiscalizeInvoice(Invoice $invoice): Response {
+        $data = Data::builder()->content($invoice)->encrypt(Util::$aesKey)->sign();
+        $globalInfo = new GlobalInfo(Util::$tin, Util::$deviceNo, "T130");
+        $payload = Payload::build()->data($data)->globalInfo($globalInfo);
+        $payload = Util::send($payload);
+        return self::extractResponse($payload, "array");
+    }
+
+
+    private static function extractResponse($payload, $type)
+    {
+        $response = Response::builder()->returnStateInfo = $payload->returnStateInfo;
+//        check encryption stata
+        $isEncrypted = $payload->data->dataDescription->codeType == "1";
+        $encryptCode = $payload->data->dataDescription->encryptCode;
+        if ($isEncrypted and $encryptCode == "1") {
+            $payload->data->decrtpy(Util::$aesKey);
+        }
+        $response->data(Util::json_deserialize($payload->data->content, $type));
+
+        return $response;
     }
 
 }
