@@ -25,8 +25,9 @@ class Util
     public static string $aesKey;
 
     /**
-     * @param Payload $payload
-     * @return Payload|bool
+     * @param mixed $content
+     * @param string $interfaceCode
+     * @return Response|bool
      */
     public static function send(mixed $content, string $interfaceCode): Response|bool
     {
@@ -54,15 +55,12 @@ class Util
      * @param $deviceNo
      * @return bool|string
      */
-    public static function getAESKey($tin, $deviceNo): bool|string
+    public static function getAESKey(): bool|string
     {
-        $globalInfo = new GlobalInfo($tin, $deviceNo, "T104");
-        $payload = Payload::build()
-            ->globalInfo($globalInfo);
-        $payload = self::send($payload);
-        $jsonContent = base64_decode($payload->data->content);
-        $passowrdDes = base64_decode(json_decode($jsonContent)->passowrdDes);
-        return base64_decode(Crypto::rsaDecrypt($passowrdDes));
+        $response = self::send("", "T104");
+        if ($response)
+            return $response->data;
+        return $response;
     }
 
     /**
@@ -122,9 +120,16 @@ class Util
 //        check encryption stata
         $isEncrypted = $payload->data->dataDescription->codeType == "1";
         $encryptCode = $payload->data->dataDescription->encryptCode;
-        if ($isEncrypted and $encryptCode == "1") {
-            $payload->data->decrtpy(Util::$aesKey);
-        }
+
+        if ($isEncrypted)
+            if ($encryptCode == "2") {
+                $payload->data->decrtpy(Util::$aesKey);
+            } else {
+                $jsonContent = base64_decode($payload->data->content);
+                $passowrdDes = base64_decode(json_decode($jsonContent)->passowrdDes);
+                $response->data(base64_decode(Crypto::rsaDecrypt($passowrdDes)));
+                return $response;
+            }
         $response->data(Util::json_deserialize($payload->data->content, $type));
 
         return $response;
