@@ -12,14 +12,14 @@ class GoodsStockMaintain
      */
     public array $goodsStockInItem = array();
 
-    public function __construct($operationType, $supplierName)
+    public function __construct($operationType, $supplierName, $stockInType)
     {
-        $this->goodsStockIn(StockIn::build()->operationType($operationType)->supplierName($supplierName));
+        $this->goodsStockIn(StockIn::build()->operationType($operationType)->supplierName($supplierName)->stockInType($stockInType));
     }
 
-    public static function build($operationType, $supplierName): GoodsStockMaintain
+    public static function build($operationType, $supplierName, $stockInType): GoodsStockMaintain
     {
-        return new self($operationType, $supplierName);
+        return new self($operationType, $supplierName, $stockInType);
     }
 
     /**

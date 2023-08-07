@@ -29,7 +29,7 @@ class Invoice
     public array $airLineGoodsDetails;
     public array $edcDetails;
 
-    public static function builder(): Invoice
+    public static function build(): Invoice
     {
         return new self();
     }
@@ -51,7 +51,7 @@ class Invoice
      * @param $tin
      * @return $this
      */
-    public function buyerDetails(string $legalName, string $email, string $buyerType = "0", string $tin = null): Invoice
+    public function buyerDetails(string $legalName, string $email, string $buyerType = "1", string $tin = ""): Invoice
     {
         $this->buyerDetails = BuyerDetails::builder()->buyerLegalName($legalName)
             ->buyerEmail($email)->buyerType($buyerType)->buyerTin($tin);
@@ -81,17 +81,18 @@ class Invoice
      * @param string $dataSource
      * @return $this
      */
-    public function basicInformation(string $deviceNo, string $issueDate, string $operator, string $invoiceType, string $invoiceKind, string $dataSource): Invoice
+    public function basicInformation(string $deviceNo, string $issuedDate, string $operator, string $invoiceType, string $invoiceKind, string $dataSource): Invoice
     {
-        $this->basicInformation = BasicInformation::builder()->deviceNo($deviceNo)->issuedDate($issueDate)
+        $this->basicInformation = BasicInformation::builder()->deviceNo($deviceNo)->issuedDate($issuedDate)
             ->operator($operator)->invoiceType($invoiceType)->invoiceKind($invoiceKind)->dataSource($dataSource);
         return $this;
     }
 
-    public function addGoodDetails(string $item, string $itemCode, string $qty, string $total, string $taxRate, string $tax,
-                                string $orderNumber, string $discountFlag, string $exciseFlag, string $goodsCategoryId): Invoice
+    public function addGoodDetails(string $item, string $itemCode, string $qty, string $unitPrice, string $total, string $unitOfMeasure, string $taxRate, string $tax,
+                                   string $orderNumber, string $discountFlag, string $exciseFlag, string $goodsCategoryId): Invoice
     {
-        $this->goodsDetails[] = GoodDetails::builder()->item($item)->itemCode($itemCode)->qty($qty)->total($total)
+        $this->goodsDetails[] = GoodDetails::builder()->item($item)->itemCode($itemCode)->qty($qty)->unitPrice($unitPrice)->total($total)
+            ->unitOfMeasure($unitOfMeasure)
             ->taxRate($taxRate)->tax($tax)->orderNumber($orderNumber)->discountFlag($discountFlag)->exciseFlag($exciseFlag)
             ->goodsCategoryId($goodsCategoryId);
         return $this;

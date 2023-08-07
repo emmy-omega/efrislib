@@ -16,7 +16,7 @@ class BuyerDetails
     public string $buyerCitizenship;
     public string $buyerSector;
     public string $buyerReferenceNo;
-    public string $buyerType = "0";
+    public string $buyerType = "1";
 
     public static function builder(): BuyerDetails
     {

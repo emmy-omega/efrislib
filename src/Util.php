@@ -15,6 +15,7 @@ use Sniper\EfrisLib\Product\Product;
 use Sniper\EfrisLib\Product\ProductQuery;
 use Sniper\EfrisLib\Product\ProductUpload;
 use Sniper\EfrisLib\Response\Invoice\CreditNote\CreditNoteResponse;
+use Sniper\EfrisLib\Response\Invoice\InvoiceResponse;
 use Sniper\EfrisLib\Response\ProductQueryResponse;
 use Sniper\EfrisLib\Response\Response;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
@@ -91,7 +92,7 @@ class Util
     }
 
     /**
-     * @param ProductUpload $products
+     * @param ProductUpload $productUpload
      * @return Response
      */
     public static function configureProduct(ProductUpload $productUpload): Response
@@ -111,12 +112,12 @@ class Util
      */
     public static function manageStock(GoodsStockMaintain $goodsStockMaintain): Response
     {
-        return self::send($goodsStockMaintain, "T130", "array", true);
+        return self::send($goodsStockMaintain, "T131", "array", true);
     }
 
     public static function fiscalizeInvoice(Invoice $invoice): Response
     {
-        return Util::send($invoice,"T108", "array", true);
+        return Util::send($invoice,"T108", InvoiceResponse::class, true);
     }
 
     public static function issueCreditNote(CreditNote $creditNote): Response
@@ -163,7 +164,10 @@ class Util
             }
             return $response;
         }
-        $response->data(Util::json_deserialize($payload->data->content, $type));
+        if (gettype($payload->data->content) == "string")
+            $response->data($payload->data->content);
+        else
+            $response->data(Util::json_deserialize($payload->data->content, $type));
 
         return $response;
     }

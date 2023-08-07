@@ -20,12 +20,12 @@ class GoodDetails
     public string $exciseRateName;
     public string $vatApplicableFlag;
 
-    public function __construct(public string $item, public string $itemCode, public string $total,
-                                public string $taxRate, public string $tax, public string $orderNumber,
-                                public string $discountFlag, public string $deemedFlag, public string $exciseFlag,
-                                public string $goodsCategoryId)
-    {
-    }
+//    public function __construct(public string $item, public string $itemCode, public string $total,
+//                                public string $taxRate, public string $tax, public string $orderNumber,
+//                                public string $discountFlag, public string $deemedFlag, public string $exciseFlag,
+//                                public string $goodsCategoryId)
+//    {
+//    }
 
     public static function builder(): GoodDetails
     {
