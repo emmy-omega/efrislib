@@ -10,11 +10,16 @@ class GoodsStockMaintain
     /**
      * @var $goodsStockInItem array<StockInItem>
      */
-    public array $goodsStockInItem;
+    public array $goodsStockInItem = array();
 
-    public static function build(): GoodsStockMaintain
+    public function __construct($operationType, $supplierName)
     {
-        return new self();
+        $this->goodsStockIn(StockIn::build()->operationType($operationType)->supplierName($supplierName));
+    }
+
+    public static function build($operationType, $supplierName): GoodsStockMaintain
+    {
+        return new self($operationType, $supplierName);
     }
 
     /**
@@ -37,5 +42,11 @@ class GoodsStockMaintain
         return $this;
     }
 
+    public function addGoodsStockInItem($goodsCode, $quantity, $unitPrice, $remarks=""): GoodsStockMaintain
+    {
+        $this->goodsStockInItem[] = StockInItem::build()->goodsCode($goodsCode)->quantity($quantity)
+            ->unitPrice($unitPrice)->remarks($remarks);
+        return $this;
+    }
 
 }
