@@ -10,6 +10,8 @@ class Invoice
     public BasicInformation $basicInformation;
     public BuyerDetails $buyerDetails;
     public BuyerExtend $buyerExtend;
+
+    public Summary $summary;
     /**
      * @var array<GoodDetails>
      */
@@ -22,10 +24,24 @@ class Invoice
      * @var array<PayWay>
      */
     public array $payWay = array();
+    public Extend $extend;
+    public ImportServiceSeller $importServiceSeller;
+    public array $airLineGoodsDetails;
+    public array $edcDetails;
 
     public static function builder(): Invoice
     {
         return new self();
+    }
+
+    /**
+     * @param Summary $summary
+     * @return Invoice
+     */
+    public function summary(Summary $summary): Invoice
+    {
+        $this->summary = $summary;
+        return $this;
     }
 
     /**

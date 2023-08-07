@@ -2,7 +2,11 @@
 
 namespace Sniper\EfrisLib;
 
+use PhpParser\Node\Scalar\String_;
+use Sniper\EfrisLib\Invoicing\CreditNote\CancelNote;
+use Sniper\EfrisLib\Invoicing\CreditNote\CreditNote;
 use Sniper\EfrisLib\Invoicing\Invoice;
+use Sniper\EfrisLib\Misc\TaxpayerInfo;
 use Sniper\EfrisLib\Payload\Data;
 use Sniper\EfrisLib\Payload\GlobalInfo;
 use Sniper\EfrisLib\Payload\Payload;
@@ -10,6 +14,7 @@ use Sniper\EfrisLib\Product\GoodsStockMaintain;
 use Sniper\EfrisLib\Product\Product;
 use Sniper\EfrisLib\Product\ProductQuery;
 use Sniper\EfrisLib\Product\ProductUpload;
+use Sniper\EfrisLib\Response\Invoice\CreditNote\CreditNoteResponse;
 use Sniper\EfrisLib\Response\ProductQueryResponse;
 use Sniper\EfrisLib\Response\Response;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
@@ -118,8 +123,31 @@ class Util
         return Util::send($invoice,"T108", "array", true);
     }
 
+    public static function issueCreditNote(CreditNote $creditNote): Response
+    {
+        return Util::send($creditNote, "T110", CreditNoteResponse::class, true);
+    }
 
-    private static function extractResponse($payload, $type, $aesKey)
+    public static function cancelCreditNote(CancelNote $cancelNote): Response
+    {
+        return Util::send($cancelNote, "T114", "array", true);
+    }
+
+    public static function tinInfo(string $tin): Response
+    {
+        $query = array();
+        $query['tin'] = $tin;
+        return Util::send($query, "T119", TaxpayerInfo::class, true);
+    }
+
+
+    /**
+     * @param Payload $payload
+     * @param $type
+     * @param $aesKey
+     * @return Response
+     */
+    private static function extractResponse(Payload $payload, $type, $aesKey): Response
     {
         $response = Response::builder()->returnStateInfo($payload->returnStateInfo);
 //        check encryption stata
@@ -131,8 +159,12 @@ class Util
             $payload->data->decrypt($aesKey);
         } else {
             $jsonContent = base64_decode($payload->data->content);
-            $passowrdDes = base64_decode(json_decode($jsonContent)->passowrdDes);
-            $response->data(base64_decode(Crypto::rsaDecrypt($passowrdDes)));
+            if ($payload->globalInfo->interfaceCode == "104") {
+                $passowrdDes = base64_decode(json_decode($jsonContent)->passowrdDes);
+                $response->data(base64_decode(Crypto::rsaDecrypt($passowrdDes)));
+            } else {
+                $response->data(self::json_deserialize($jsonContent, 'array'));
+            }
             return $response;
         }
         $response->data(Util::json_deserialize($payload->data->content, $type));
