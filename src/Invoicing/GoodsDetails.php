@@ -1,8 +1,18 @@
 <?php
 
 namespace Sniper\EfrisLib\Invoicing;
-class GoodDetails
+class GoodsDetails
 {
+    public string $item;
+    public string $itemCode;
+    public string $total;
+    public string $taxRate;
+    public string $tax;
+    public string $orderNumber;
+    public string $discountFlag;
+    public string $deemedFlag;
+    public string $exciseFlag;
+    public string $goodsCategoryId;
     public string $qty;
     public string $unitOfMeasure;
     public string $unitPrice;
@@ -27,16 +37,16 @@ class GoodDetails
 //    {
 //    }
 
-    public static function builder(): GoodDetails
+    public static function builder(): GoodsDetails
     {
         return new self();
     }
 
     /**
      * @param string $qty
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function qty(string $qty): GoodDetails
+    public function qty(string $qty): GoodsDetails
     {
         $this->qty = $qty;
         return $this;
@@ -44,9 +54,9 @@ class GoodDetails
 
     /**
      * @param string $unitOfMeasure
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function unitOfMeasure(string $unitOfMeasure): GoodDetails
+    public function unitOfMeasure(string $unitOfMeasure): GoodsDetails
     {
         $this->unitOfMeasure = $unitOfMeasure;
         return $this;
@@ -54,9 +64,9 @@ class GoodDetails
 
     /**
      * @param string $unitPrice
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function unitPrice(string $unitPrice): GoodDetails
+    public function unitPrice(string $unitPrice): GoodsDetails
     {
         $this->unitPrice = $unitPrice;
         return $this;
@@ -64,9 +74,9 @@ class GoodDetails
 
     /**
      * @param string $discountTaxRate
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function discountTaxRate(string $discountTaxRate): GoodDetails
+    public function discountTaxRate(string $discountTaxRate): GoodsDetails
     {
         $this->discountTaxRate = $discountTaxRate;
         return $this;
@@ -74,9 +84,9 @@ class GoodDetails
 
     /**
      * @param string $categoryId
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function categoryId(string $categoryId): GoodDetails
+    public function categoryId(string $categoryId): GoodsDetails
     {
         $this->categoryId = $categoryId;
         return $this;
@@ -84,9 +94,9 @@ class GoodDetails
 
     /**
      * @param string $categoryName
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function categoryName(string $categoryName): GoodDetails
+    public function categoryName(string $categoryName): GoodsDetails
     {
         $this->categoryName = $categoryName;
         return $this;
@@ -94,9 +104,9 @@ class GoodDetails
 
     /**
      * @param string $goodsCategoryName
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function goodsCategoryName(string $goodsCategoryName): GoodDetails
+    public function goodsCategoryName(string $goodsCategoryName): GoodsDetails
     {
         $this->goodsCategoryName = $goodsCategoryName;
         return $this;
@@ -104,9 +114,9 @@ class GoodDetails
 
     /**
      * @param string $exciseRate
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function exciseRate(string $exciseRate): GoodDetails
+    public function exciseRate(string $exciseRate): GoodsDetails
     {
         $this->exciseRate = $exciseRate;
         return $this;
@@ -114,9 +124,9 @@ class GoodDetails
 
     /**
      * @param string $exciseRule
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function exciseRule(string $exciseRule): GoodDetails
+    public function exciseRule(string $exciseRule): GoodsDetails
     {
         $this->exciseRule = $exciseRule;
         return $this;
@@ -124,9 +134,9 @@ class GoodDetails
 
     /**
      * @param string $exciseTax
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function exciseTax(string $exciseTax): GoodDetails
+    public function exciseTax(string $exciseTax): GoodsDetails
     {
         $this->exciseTax = $exciseTax;
         return $this;
@@ -134,9 +144,9 @@ class GoodDetails
 
     /**
      * @param string $pack
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function pack(string $pack): GoodDetails
+    public function pack(string $pack): GoodsDetails
     {
         $this->pack = $pack;
         return $this;
@@ -144,9 +154,9 @@ class GoodDetails
 
     /**
      * @param string $pick
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function pick(string $pick): GoodDetails
+    public function pick(string $pick): GoodsDetails
     {
         $this->pick = $pick;
         return $this;
@@ -154,9 +164,9 @@ class GoodDetails
 
     /**
      * @param string $exciseUnit
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function exciseUnit(string $exciseUnit): GoodDetails
+    public function exciseUnit(string $exciseUnit): GoodsDetails
     {
         $this->exciseUnit = $exciseUnit;
         return $this;
@@ -164,9 +174,9 @@ class GoodDetails
 
     /**
      * @param string $exciseCurrency
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function exciseCurrency(string $exciseCurrency): GoodDetails
+    public function exciseCurrency(string $exciseCurrency): GoodsDetails
     {
         $this->exciseCurrency = $exciseCurrency;
         return $this;
@@ -174,9 +184,9 @@ class GoodDetails
 
     /**
      * @param string $exciseRateName
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function exciseRateName(string $exciseRateName): GoodDetails
+    public function exciseRateName(string $exciseRateName): GoodsDetails
     {
         $this->exciseRateName = $exciseRateName;
         return $this;
@@ -184,9 +194,9 @@ class GoodDetails
 
     /**
      * @param string $vatApplicableFlag
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function vatApplicableFlag(string $vatApplicableFlag): GoodDetails
+    public function vatApplicableFlag(string $vatApplicableFlag): GoodsDetails
     {
         $this->vatApplicableFlag = $vatApplicableFlag;
         return $this;
@@ -194,9 +204,9 @@ class GoodDetails
 
     /**
      * @param string $item
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function item(string $item): GoodDetails
+    public function item(string $item): GoodsDetails
     {
         $this->item = $item;
         return $this;
@@ -204,9 +214,9 @@ class GoodDetails
 
     /**
      * @param string $itemCode
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function itemCode(string $itemCode): GoodDetails
+    public function itemCode(string $itemCode): GoodsDetails
     {
         $this->itemCode = $itemCode;
         return $this;
@@ -214,9 +224,9 @@ class GoodDetails
 
     /**
      * @param string $total
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function total(string $total): GoodDetails
+    public function total(string $total): GoodsDetails
     {
         $this->total = $total;
         return $this;
@@ -224,9 +234,9 @@ class GoodDetails
 
     /**
      * @param string $taxRate
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function taxRate(string $taxRate): GoodDetails
+    public function taxRate(string $taxRate): GoodsDetails
     {
         $this->taxRate = $taxRate;
         return $this;
@@ -234,9 +244,9 @@ class GoodDetails
 
     /**
      * @param string $tax
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function tax(string $tax): GoodDetails
+    public function tax(string $tax): GoodsDetails
     {
         $this->tax = $tax;
         return $this;
@@ -244,9 +254,9 @@ class GoodDetails
 
     /**
      * @param string $orderNumber
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function orderNumber(string $orderNumber): GoodDetails
+    public function orderNumber(string $orderNumber): GoodsDetails
     {
         $this->orderNumber = $orderNumber;
         return $this;
@@ -254,9 +264,9 @@ class GoodDetails
 
     /**
      * @param string $discountFlag
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function discountFlag(string $discountFlag): GoodDetails
+    public function discountFlag(string $discountFlag): GoodsDetails
     {
         $this->discountFlag = $discountFlag;
         return $this;
@@ -264,9 +274,9 @@ class GoodDetails
 
     /**
      * @param string $deemedFlag
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function deemedFlag(string $deemedFlag): GoodDetails
+    public function deemedFlag(string $deemedFlag): GoodsDetails
     {
         $this->deemedFlag = $deemedFlag;
         return $this;
@@ -274,9 +284,9 @@ class GoodDetails
 
     /**
      * @param string $exciseFlag
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function exciseFlag(string $exciseFlag): GoodDetails
+    public function exciseFlag(string $exciseFlag): GoodsDetails
     {
         $this->exciseFlag = $exciseFlag;
         return $this;
@@ -284,9 +294,9 @@ class GoodDetails
 
     /**
      * @param string $goodsCategoryId
-     * @return GoodDetails
+     * @return GoodsDetails
      */
-    public function goodsCategoryId(string $goodsCategoryId): GoodDetails
+    public function goodsCategoryId(string $goodsCategoryId): GoodsDetails
     {
         $this->goodsCategoryId = $goodsCategoryId;
         return $this;

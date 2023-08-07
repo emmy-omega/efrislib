@@ -12,7 +12,7 @@ class BuyerDetails
     public string $buyerEmail;
     public string $buyerMobilePhone;
     public string $buyerLinePhone;
-    public string $buyerPlaceOfBusiness;
+    public string $buyerPlaceOfBusi;
     public string $buyerCitizenship;
     public string $buyerSector;
     public string $buyerReferenceNo;
@@ -114,12 +114,12 @@ class BuyerDetails
     }
 
     /**
-     * @param string $buyerPlaceOfBusiness
+     * @param string $buyerPlaceOfBusi
      * @return BuyerDetails
      */
-    public function buyerPlaceOfBusiness(string $buyerPlaceOfBusiness): BuyerDetails
+    public function buyerPlaceOfBusi(string $buyerPlaceOfBusi): BuyerDetails
     {
-        $this->buyerPlaceOfBusiness = $buyerPlaceOfBusiness;
+        $this->buyerPlaceOfBusi = $buyerPlaceOfBusi;
         return $this;
     }
 

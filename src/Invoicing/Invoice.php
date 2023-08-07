@@ -13,7 +13,7 @@ class Invoice
 
     public Summary $summary;
     /**
-     * @var array<GoodDetails>
+     * @var array<GoodsDetails>
      */
     public array $goodsDetails = array();
     /**
@@ -45,10 +45,10 @@ class Invoice
     }
 
     /**
-     * @param $legalName
-     * @param $email
+     * @param string $legalName
+     * @param string $email
      * @param string $buyerType
-     * @param $tin
+     * @param string $tin
      * @return $this
      */
     public function buyerDetails(string $legalName, string $email, string $buyerType = "1", string $tin = ""): Invoice
@@ -91,7 +91,7 @@ class Invoice
     public function addGoodDetails(string $item, string $itemCode, string $qty, string $unitPrice, string $total, string $unitOfMeasure, string $taxRate, string $tax,
                                    string $orderNumber, string $discountFlag, string $exciseFlag, string $goodsCategoryId): Invoice
     {
-        $this->goodsDetails[] = GoodDetails::builder()->item($item)->itemCode($itemCode)->qty($qty)->unitPrice($unitPrice)->total($total)
+        $this->goodsDetails[] = GoodsDetails::builder()->item($item)->itemCode($itemCode)->qty($qty)->unitPrice($unitPrice)->total($total)
             ->unitOfMeasure($unitOfMeasure)
             ->taxRate($taxRate)->tax($tax)->orderNumber($orderNumber)->discountFlag($discountFlag)->exciseFlag($exciseFlag)
             ->goodsCategoryId($goodsCategoryId);

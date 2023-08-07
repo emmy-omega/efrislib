@@ -117,7 +117,7 @@ class Util
 
     public static function fiscalizeInvoice(Invoice $invoice): Response
     {
-        return Util::send($invoice,"T108", InvoiceResponse::class, true);
+        return Util::send($invoice,"T109", InvoiceResponse::class, true);
     }
 
     public static function issueCreditNote(CreditNote $creditNote): Response
