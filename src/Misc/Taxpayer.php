@@ -92,7 +92,7 @@ class Taxpayer
     }
 
     /**
-     * @param string $taxpayerType
+     * @param TaxpayerType $taxpayerType
      * @return Taxpayer
      */
     public function taxpayerType(TaxpayerType $taxpayerType): Taxpayer
