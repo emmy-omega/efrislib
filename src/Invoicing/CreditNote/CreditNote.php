@@ -3,8 +3,11 @@
 namespace Sniper\EfrisLib\Invoicing\CreditNote;
 
 use Sniper\EfrisLib\Invoicing\BuyerDetails;
+use Sniper\EfrisLib\Invoicing\GoodDetails;
 use Sniper\EfrisLib\Invoicing\ImportServiceSeller;
+use Sniper\EfrisLib\Invoicing\PayWay;
 use Sniper\EfrisLib\Invoicing\Summary;
+use Sniper\EfrisLib\Invoicing\TaxDetails;
 
 class CreditNote
 {

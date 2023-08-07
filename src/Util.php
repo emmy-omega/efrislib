@@ -96,7 +96,7 @@ class Util
      */
     public static function configureProduct(ProductUpload $productUpload): Response
     {
-        return Util::send($productUpload->products, "T130");
+        return Util::send($productUpload->products, "T130", "array", true);
     }
 
     public static function queryProduct(string $pageSize = "10", string $pageNo = "1", $goodName = "", $goodsCode = ""): Response
@@ -111,11 +111,7 @@ class Util
      */
     public static function manageStock(GoodsStockMaintain $goodsStockMaintain): Response
     {
-        $data = Data::builder()->content($goodsStockMaintain)->encrypt(Util::$aesKey)->sign();
-        $globalInfo = new GlobalInfo(Util::$tin, Util::$deviceNo, "T130");
-        $payload = Payload::build()->data($data)->globalInfo($globalInfo);
-        $payload = Util::send($payload);
-        return self::extractResponse($payload, "array");
+        return self::send($goodsStockMaintain, "T130", "array", true);
     }
 
     public static function fiscalizeInvoice(Invoice $invoice): Response

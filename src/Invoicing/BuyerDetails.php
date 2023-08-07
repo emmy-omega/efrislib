@@ -157,7 +157,7 @@ class BuyerDetails
      * @param string $buyerType
      * @return BuyerDetails
      */
-    public function setBuyerType(string $buyerType): BuyerDetails
+    public function buyerType(string $buyerType): BuyerDetails
     {
         $this->buyerType = $buyerType;
         return $this;
