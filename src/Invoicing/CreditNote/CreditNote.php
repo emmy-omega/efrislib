@@ -47,9 +47,16 @@ class CreditNote
     */
     public array $attachmentList;
 
-    public static function build(): CreditNote
+    public function __construct(string $reasonCode, string $applicationTime, string $currency)
     {
-        return new self();
+        $this->reasonCode = $reasonCode;
+        $this->applicationTime = $applicationTime;
+        $this->currency = $currency;
+    }
+
+    public static function build(string $reasonCode, string $applicationTime, string $currency): CreditNote
+    {
+        return new self($reasonCode, $applicationTime, $currency);
     }
 
     /**
