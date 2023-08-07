@@ -155,7 +155,7 @@ class Util
             $payload->data->decrypt($aesKey);
         } else {
             $jsonContent = base64_decode($payload->data->content);
-            if ($payload->globalInfo->interfaceCode == "104") {
+            if ($payload->globalInfo->interfaceCode == "T104") {
                 $passowrdDes = base64_decode(json_decode($jsonContent)->passowrdDes);
                 $response->data(base64_decode(Crypto::rsaDecrypt($passowrdDes)));
             } else {

@@ -14,7 +14,7 @@ class Response
         $this->returnStateInfo = new ReturnStateInfo();
     }
 
-    public static function builder(): Res
+    public static function builder(): Response
     {
         return new self();
     }
