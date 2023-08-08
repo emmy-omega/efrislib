@@ -5,7 +5,9 @@ namespace Sniper\EfrisLib;
 use PhpParser\Node\Scalar\String_;
 use Sniper\EfrisLib\Invoicing\CreditNote\CancelNote;
 use Sniper\EfrisLib\Invoicing\CreditNote\CreditNote;
+use Sniper\EfrisLib\Invoicing\CreditNote\CreditNoteQuery;
 use Sniper\EfrisLib\Invoicing\Invoice;
+use Sniper\EfrisLib\Invoicing\InvoiceQuery;
 use Sniper\EfrisLib\Misc\TaxpayerInfo;
 use Sniper\EfrisLib\Payload\Data;
 use Sniper\EfrisLib\Payload\GlobalInfo;
@@ -120,9 +122,26 @@ class Util
         return Util::send($invoice,"T109", InvoiceResponse::class, true);
     }
 
+
+    public static function retrieveInvoice(string $invoiceNo): Response
+    {
+        $query = array("invoiceNo"=>$invoiceNo);
+        return self::send($query, "T108", InvoiceResponse::class, true);
+    }
+
+    public static function queryInvoice(InvoiceQuery $invoiceQuery): Response
+    {
+        return self::send($invoiceQuery, "106", 'array', true);
+    }
+
     public static function issueCreditNote(CreditNote $creditNote): Response
     {
         return Util::send($creditNote, "T110", CreditNoteResponse::class, true);
+    }
+
+    public static function queryCreditNote(CreditNoteQuery $creditNoteQuery): Response
+    {
+        return self::send($creditNoteQuery, "T111", 'array');
     }
 
     public static function cancelCreditNote(CancelNote $cancelNote): Response
@@ -164,7 +183,7 @@ class Util
             }
             return $response;
         }
-        if (gettype($payload->data->content) == "string")
+        if (gettype($payload->data->content) == "string" and empty($payload->data->content))
             $response->data($payload->data->content);
         else
             $response->data(Util::json_deserialize($payload->data->content, $type));
