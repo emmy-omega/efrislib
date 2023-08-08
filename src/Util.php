@@ -119,13 +119,13 @@ class Util
 
     public static function fiscalizeInvoice(Invoice $invoice): Response
     {
-        return Util::send($invoice,"T109", InvoiceResponse::class, true);
+        return Util::send($invoice, "T109", InvoiceResponse::class, true);
     }
 
 
     public static function retrieveInvoice(string $invoiceNo): Response
     {
-        $query = array("invoiceNo"=>$invoiceNo);
+        $query = array("invoiceNo" => $invoiceNo);
         return self::send($query, "T108", InvoiceResponse::class, true);
     }
 
@@ -142,6 +142,11 @@ class Util
     public static function queryCreditNote(CreditNoteQuery $creditNoteQuery): Response
     {
         return self::send($creditNoteQuery, "T111", 'array');
+    }
+
+    public static function retrieveCreditNote(string $id): Response
+    {
+        return self::send(array("id" => $id), "T112", 'array');
     }
 
     public static function cancelCreditNote(CancelNote $cancelNote): Response
