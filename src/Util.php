@@ -2,12 +2,14 @@
 
 namespace Sniper\EfrisLib;
 
+use JsonException;
 use PhpParser\Node\Scalar\String_;
 use Sniper\EfrisLib\Invoicing\CreditNote\CancelNote;
 use Sniper\EfrisLib\Invoicing\CreditNote\CreditNote;
 use Sniper\EfrisLib\Invoicing\CreditNote\CreditNoteQuery;
 use Sniper\EfrisLib\Invoicing\Invoice;
 use Sniper\EfrisLib\Invoicing\InvoiceQuery;
+use Sniper\EfrisLib\Misc\Enums\TaxpayerType;
 use Sniper\EfrisLib\Misc\TaxpayerInfo;
 use Sniper\EfrisLib\Payload\Data;
 use Sniper\EfrisLib\Payload\GlobalInfo;
@@ -36,6 +38,7 @@ class Util
      * @param mixed $content
      * @param string $interfaceCode
      * @return Response|bool
+     * @throws JsonException
      */
     public static function send(mixed $content, string $interfaceCode, $type, bool $encrypt = true): Response|bool
     {
@@ -52,13 +55,13 @@ class Util
         $curl = curl_init("https://efristest.ura.go.ug/efrisws/ws/taapp/getInformation");
         curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
         curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, Util::customJsonEncode($payload));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         $response = curl_exec($curl);
         curl_close($curl);
         if ($response) {
-            $payload = self::json_deserialize($response, Payload::class);
+            $payload = Util::customJsonDecode($response);//self::json_deserialize($response, Payload::class);
             return self::extractResponse($payload, $type, $aesKey);
         }
         return false;
@@ -195,6 +198,28 @@ class Util
 
         return $response;
     }
+
+
+    /**
+     * @throws JsonException
+     */
+    private static function customJsonEncode($data): string
+    {
+        return json_encode($data, JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    private static function customJsonDecode(string $json): mixed
+    {
+        $decoded = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        if (isset($decoded['taxpayerType'])) {
+            $decoded['taxpayerType'] = TaxpayerType::fromJson($decoded['taxpayerType']);
+        }
+        return $decoded;
+    }
+
 }
 
 //Crypto::$privateKeyPath = "/home/sniper/certificates/private.p12";

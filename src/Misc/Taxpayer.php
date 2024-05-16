@@ -2,23 +2,22 @@
 
 namespace Sniper\EfrisLib\Misc;
 
+use JsonSerializable;
 use Sniper\EfrisLib\Misc\Enums\TaxpayerType;
 
-class Taxpayer
+class Taxpayer implements JsonSerializable
 {
-    public string $tin;
-    public string $ninBrn;
-    public string $legalName;
-    public string $businessName;
-    public string $contactNumber;
-    public string $contactEmail;
-    public string $address;
-    public TaxpayerType $taxpayerType;
-    public string $governmentTIN;
-
-    public static function builder(): Taxpayer
+    public function __construct(
+        public string       $tin,
+        public string       $ninBrn,
+        public string       $legalName,
+        public string       $businessName,
+        public string       $contactNumber,
+        public string       $contactEmail,
+        public string       $address,
+        public TaxpayerType $taxpayerType,
+        public string       $governmentTIN)
     {
-        return new self();
     }
 
     /**
@@ -111,4 +110,23 @@ class Taxpayer
         return $this;
     }
 
+    public function jsonSerialize(): array
+    {
+        return [
+            'tin' => $this->tin,
+            'ninBrn' => $this->ninBrn,
+            'legalName' => $this->legalName,
+            'businessName' => $this->businessName,
+            'contactNumber' => $this->contactNumber,
+            'contactEmail' => $this->contactEmail,
+            '$address' => $this->address,
+            'taxpayerType' => $this->taxpayerType->jsonSerialize(),
+            'governmentTIN' => $this->governmentTIN,
+        ];
+    }
+
+    public static function fromJson(array $jsonData): self
+    {
+        return new self($jsonData['tin'], $jsonData['ninBrn'], $jsonData['legalName'], $jsonData['businessName'], $jsonData['contactNumber'], $jsonData['contactEmail'], $jsonData['address'], TaxpayerType::fromJson($jsonData['taxpayerType']), $jsonData['governmentTIN']);
+    }
 }
