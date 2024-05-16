@@ -11,7 +11,7 @@ use function PHPUnit\Framework\isInstanceOf;
 
 class Data implements JsonSerializable
 {
-    public function __construct(public mixed $content=null, public string $signature = "", public DataDescription $dataDescription=new DataDescription())
+    public function __construct(public string $content = "", public string $signature = "", public DataDescription $dataDescription=new DataDescription())
     {
     }
 
@@ -19,7 +19,7 @@ class Data implements JsonSerializable
      * @param string $content
      * @return $this
      */
-    public function content(mixed $content=null): Data
+    public function content(string $content=""): Data
     {
         $this->content = $content;
         return $this;
@@ -67,11 +67,11 @@ class Data implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function jsonSerialize(): array
     {
-        return ['content' => (is_null($this->content) ? null : is_string($this->content)) ? $this->content : $this->content->jsonSerialize(), 'signature' => $this->signature, 'dataDescription' => $this->dataDescription->jsonSerialize()];
+        return ['content' => $this->content, 'signature' => $this->signature, 'dataDescription' => $this->dataDescription->jsonSerialize()];
     }
 
     public static function fromJson(array $json): self

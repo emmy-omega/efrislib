@@ -20,9 +20,9 @@ class Crypto
         return $decryptedData;
     }
 
-    public static function aesEncrypt(mixed $data, string $aesKey): bool|string
+    public static function aesEncrypt(string $data, string $aesKey): bool|string
     {
-        $data = json_encode($data);
+//        $data = json_encode($data);
         if ($data)
             return openssl_encrypt($data, Crypto::cipherAlgorithm, $aesKey);
         return $data;

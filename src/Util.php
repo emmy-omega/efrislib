@@ -29,6 +29,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use function PHPUnit\Framework\isEmpty;
 
 class Util
 {
@@ -40,17 +41,19 @@ class Util
      * @param mixed $content
      * @param string $interfaceCode
      * @return Response|bool
-     * @throws JsonException
      */
     public static function send(mixed $content, string $interfaceCode, $type, bool $encrypt = true): Response|bool
     {
         $aesKey = null;
         $data = new Data(content: $content);
+        if (!is_null($content)) {
+            $data->content(self::json_serialize($content));
+        }
         if ($encrypt) {
             $aesKey = self::getAESKey();
             $data->encrypt($aesKey);
         }
-        if (!is_null($data->content)) {
+        if (!isEmpty($data->content)) {
             $data->sign();
         }
         return self::post($interfaceCode, $data, $type, $aesKey);
@@ -80,6 +83,15 @@ class Util
             return $serializer->decode($json, 'json');
         return $serializer->deserialize($json, $type, 'json',
             [AbstractObjectNormalizer::SKIP_NULL_VALUES, AbstractObjectNormalizer::SKIP_UNINITIALIZED_VALUES]);
+    }
+
+    public static function json_serialize(mixed $data): string
+    {
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
+        return $serializer->serialize($data, 'json');
     }
 
     /**
@@ -195,9 +207,6 @@ class Util
      */
     public static function post(string $interfaceCode, Data $data, $type, bool|string|null $aesKey): false|Response
     {
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
 
         $globalInfo = new GlobalInfo(self::$tin, self::$deviceNo, $interfaceCode);
         $payload = new Payload(globalInfo: $globalInfo, data: $data); //::build()->data($data)->globalInfo($globalInfo);
@@ -205,13 +214,13 @@ class Util
         $curl = curl_init("https://efristest.ura.go.ug/efrisws/ws/taapp/getInformation");
         curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
         curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $serializer->serialize($payload, 'json'));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, self::json_serialize($payload));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         $response = curl_exec($curl);
         curl_close($curl);
         if ($response) {
-            $payload = $serializer->deserialize($response, Payload::class, 'json');
+            $payload = self::json_deserialize($response, Payload::class);
             // self::json_deserialize($response, Payload::class);
             return self::extractResponse($payload, $type, $aesKey);
         }
