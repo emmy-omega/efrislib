@@ -78,10 +78,11 @@ class Util
      * @param $tin
      * @param $deviceNo
      * @return bool|string
+     * @throws JsonException
      */
     private static function getAESKey(): bool|string
     {
-        $response = self::send("", "T104", "string", false);
+        $response = self::send(null, "T104", "string", false);
         if ($response)
             return $response->data;
         return $response;
