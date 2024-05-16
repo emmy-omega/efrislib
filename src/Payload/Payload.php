@@ -23,7 +23,7 @@ class Payload extends Builder
      * @param ReturnStateInfo $returnStateInfo
      * @return Payload
      */
-    public function returnStateInfo(ReturnStateInfo $returnStateInfo): Payload
+    public function returnStateInfo(ReturnStateInfo $returnStateInfo = new ReturnStateInfo()): Payload
     {
         $this->returnStateInfo = $returnStateInfo;
         return $this;
