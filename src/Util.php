@@ -44,6 +44,10 @@ class Util
      */
     public static function send(mixed $content, string $interfaceCode, $type, bool $encrypt = true): Response|bool
     {
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
         $aesKey = null;
         $data = Data::builder()->content($content);
         if ($encrypt) {
@@ -57,13 +61,14 @@ class Util
         $curl = curl_init("https://efristest.ura.go.ug/efrisws/ws/taapp/getInformation");
         curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
         curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, Util::customJsonEncode($payload));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $serializer->serialize($payload, 'json'));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         $response = curl_exec($curl);
         curl_close($curl);
         if ($response) {
-            $payload = self::json_deserialize($response, Payload::class);
+            $payload = $serializer->deserialize($response, Payload::class, 'json');
+            // self::json_deserialize($response, Payload::class);
             return self::extractResponse($payload, $type, $aesKey);
         }
         return false;
