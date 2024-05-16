@@ -8,7 +8,7 @@ use Sniper\EfrisLib\Crypto;
 
 class Data implements JsonSerializable
 {
-    public function __construct(public mixed $content="", public string $signature = "", public DataDescription $dataDescription=new DataDescription())
+    public function __construct(public mixed $content=null, public string $signature = "", public DataDescription $dataDescription=new DataDescription())
     {
     }
 
@@ -21,7 +21,7 @@ class Data implements JsonSerializable
      * @param string $content
      * @return $this
      */
-    public function content(mixed $content): Data
+    public function content(mixed $content=null): Data
     {
         $this->content = $content;
         return $this;
@@ -31,7 +31,7 @@ class Data implements JsonSerializable
      * @param string $signature
      * @return $this
      */
-    public function signature(string $signature): Data
+    public function signature(string $signature=""): Data
     {
         $this->signature = $signature;
         return $this;
