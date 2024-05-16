@@ -8,16 +8,10 @@ use Sniper\EfrisLib\Crypto;
 /**
  * @template T of Payload
  */
-class Payload extends Builder
+class Payload extends Builder implements \JsonSerializable
 {
-    public ReturnStateInfo $returnStateInfo;
-    public Data $data;
-    public GlobalInfo $globalInfo;
-    public function __construct()
-    {
-        $this->returnStateInfo = new ReturnStateInfo();
-        $this->data = new Data();
-    }
+    public function __construct(public GlobalInfo $globalInfo, public ReturnStateInfo $returnStateInfo = new ReturnStateInfo(), public Data $data=new Data())
+    {}
 
     /**
      * @param ReturnStateInfo $returnStateInfo
@@ -71,5 +65,15 @@ class Payload extends Builder
     {
         $this->data->content = Crypto::aesDecrypt($this->data->content, $aesKey);
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return ['data' => $this->data, 'globalInfo' => $this->globalInfo, 'returnStateInfo' => $this->returnStateInfo];
+    }
+
+    public  static function fromJson(array $json): Payload
+    {
+        return new self($json['data'], $json['globalInfo'], $json['returnStateInfo']);
     }
 }

@@ -3,16 +3,13 @@
 namespace Sniper\EfrisLib\Payload;
 
 
+use JsonSerializable;
 use Sniper\EfrisLib\Crypto;
 
-class Data
+class Data implements JsonSerializable
 {
-    public mixed $content = "";
-    public string $signature = "";
-    public DataDescription $dataDescription;
-    public function __construct()
+    public function __construct(public mixed $content="", public string $signature = "", public DataDescription $dataDescription=new DataDescription())
     {
-        $this->dataDescription = new DataDescription();
     }
 
     public static function builder(): Data
@@ -71,4 +68,16 @@ class Data
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize(): array
+    {
+        return ['content' => $this->content, 'signature' => $this->signature, 'dataDescription' => $this->dataDescription];
+    }
+
+    public static function fromJson(array $json): self
+    {
+        return new self($json['content'], $json['signature'], $json['dataDescription']);
+    }
 }
