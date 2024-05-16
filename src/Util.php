@@ -54,7 +54,9 @@ class Util
             $aesKey = self::getAESKey();
             $data->encrypt($aesKey);
         }
-        $data->sign();
+        if (!is_null($data->content)) {
+            $data->sign();
+        }
         $globalInfo = new GlobalInfo(self::$tin, self::$deviceNo, $interfaceCode);
         $payload = Payload::build()->data($data)->globalInfo($globalInfo);
 
