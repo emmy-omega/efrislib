@@ -49,7 +49,7 @@ class Util
         $serializer = new Serializer($normalizers, $encoders);
 
         $aesKey = null;
-        $data = Data::builder()->content($content);
+        $data = new Data(content: $content);
         if ($encrypt) {
             $aesKey = self::getAESKey();
             $data->encrypt($aesKey);
