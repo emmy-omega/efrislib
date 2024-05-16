@@ -58,7 +58,7 @@ class Util
             $data->sign();
         }
         $globalInfo = new GlobalInfo(self::$tin, self::$deviceNo, $interfaceCode);
-        $payload = Payload::build()->data($data)->globalInfo($globalInfo);
+        $payload = new Payload(globalInfo: $globalInfo, data: $data); //::build()->data($data)->globalInfo($globalInfo);
 
         $curl = curl_init("https://efristest.ura.go.ug/efrisws/ws/taapp/getInformation");
         curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));

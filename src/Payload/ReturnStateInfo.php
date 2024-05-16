@@ -4,7 +4,7 @@ namespace Sniper\EfrisLib\Payload;
 
 class ReturnStateInfo implements \JsonSerializable
 {
-    public function __construct(public string $returnCode, public string $returnMessage)
+    public function __construct(public string $returnCode="", public string $returnMessage="")
     {
     }
 

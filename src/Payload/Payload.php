@@ -10,7 +10,7 @@ use Sniper\EfrisLib\Crypto;
  */
 class Payload extends Builder implements \JsonSerializable
 {
-    public function __construct(public GlobalInfo $globalInfo, public ReturnStateInfo $returnStateInfo = new ReturnStateInfo(), public Data $data=new Data())
+    public function __construct(public ?GlobalInfo $globalInfo, public ReturnStateInfo $returnStateInfo = new ReturnStateInfo(), public Data $data=new Data())
     {}
 
     /**
@@ -48,7 +48,7 @@ class Payload extends Builder implements \JsonSerializable
 
     public static function build(): Payload
     {
-        return new self();
+        return new self(globalInfo: null);
     }
 
     /**
