@@ -4,17 +4,13 @@ namespace Sniper\EfrisLib\Payload;
 
 
 use JsonSerializable;
+use Sniper\EfrisLib\Builder;
 use Sniper\EfrisLib\Crypto;
 
-class Data implements JsonSerializable
+class Data extends Builder implements JsonSerializable
 {
     public function __construct(public mixed $content=null, public string $signature = "", public DataDescription $dataDescription=new DataDescription())
     {
-    }
-
-    public static function builder(): Data
-    {
-        return new self();
     }
 
     /**
