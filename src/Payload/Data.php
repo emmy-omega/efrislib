@@ -36,7 +36,7 @@ class Data implements JsonSerializable
         $this->signature = $signature;
         return $this;
     }
-    public function dataDescription(DataDescription $dataDescription): Data
+    public function dataDescription(DataDescription $dataDescription=new DataDescription()): Data
     {
         $this->dataDescription = $dataDescription;
         return $this;
