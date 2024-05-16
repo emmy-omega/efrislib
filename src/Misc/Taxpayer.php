@@ -13,7 +13,7 @@ class Taxpayer
     public string $contactNumber;
     public string $contactEmail;
     public string $address;
-    public string $taxpayerType;
+    public TaxpayerType $taxpayerType;
     public string $governmentTIN;
 
     public static function builder(): Taxpayer
@@ -92,10 +92,10 @@ class Taxpayer
     }
 
     /**
-     * @param string $taxpayerType
+     * @param TaxpayerType $taxpayerType
      * @return Taxpayer
      */
-    public function taxpayerType(string $taxpayerType): Taxpayer
+    public function taxpayerType(TaxpayerType $taxpayerType): Taxpayer
     {
         $this->taxpayerType = $taxpayerType;
         return $this;
