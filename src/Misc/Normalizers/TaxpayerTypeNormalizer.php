@@ -3,9 +3,10 @@ namespace Sniper\EfrisLib\Misc\Normalizers;
 
 use Sniper\EfrisLib\Misc\Enums\TaxpayerType;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class TaxpayerTypeNormalizer implements NormalizerInterface
+class TaxpayerTypeNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     public function normalize($object, string $format = null, array $context = [])
     {
