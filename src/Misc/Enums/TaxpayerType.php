@@ -2,8 +2,19 @@
 
 namespace Sniper\EfrisLib\Misc\Enums;
 
-enum TaxpayerType: string
+use JsonSerializable;
+use Sniper\EfrisLib\Misc\Taxpayer;
+
+enum TaxpayerType implements jsonSerializable
 {
-    case Individual = "201";
-    case NonIndividual = "202";
+    case Individual;
+    case NonIndividual;
+
+    public function jsonSerialize(): mixed
+    {
+        return match ($this) {
+            TaxpayerType::Individual => '201',
+            TaxpayerType::NonIndividual => '202',
+        };
+    }
 }
