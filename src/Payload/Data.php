@@ -9,7 +9,7 @@ use Sniper\EfrisLib\Crypto;
 
 class Data implements JsonSerializable
 {
-    public function __construct(public mixed $content=null, public string $signature = "", public DataDescription $dataDescription=new DataDescription())
+    public function __construct(public ?string $content=null, public string $signature = "", public DataDescription $dataDescription=new DataDescription())
     {
     }
 
@@ -69,11 +69,11 @@ class Data implements JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return ['content' => $this->content, 'signature' => $this->signature, 'dataDescription' => $this->dataDescription];
+        return ['content' => $this->content, 'signature' => $this->signature, 'dataDescription' => $this->dataDescription->jsonSerialize()];
     }
 
     public static function fromJson(array $json): self
     {
-        return new self($json['content'], $json['signature'], $json['dataDescription']);
+        return new self($json['content'], $json['signature'], DataDescription::fromJson($json['dataDescription']));
     }
 }
