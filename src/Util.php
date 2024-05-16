@@ -45,7 +45,7 @@ class Util
     public static function send(mixed $content, string $interfaceCode, $type, bool $encrypt = true): Response|bool
     {
         $aesKey = null;
-        $data = new Data(content: $content);
+        $data = new Data();
         if (!is_null($content)) {
             $data->content(self::json_serialize($content));
         }
