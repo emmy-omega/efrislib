@@ -57,37 +57,22 @@ class Util
         if (!is_null($data->content)) {
             $data->sign();
         }
-        $globalInfo = new GlobalInfo(self::$tin, self::$deviceNo, $interfaceCode);
-        $payload = new Payload(globalInfo: $globalInfo, data: $data); //::build()->data($data)->globalInfo($globalInfo);
-
-        $curl = curl_init("https://efristest.ura.go.ug/efrisws/ws/taapp/getInformation");
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $serializer->serialize($payload, 'json'));
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-        if ($response) {
-            $payload = $serializer->deserialize($response, Payload::class, 'json');
-            // self::json_deserialize($response, Payload::class);
-            return self::extractResponse($payload, $type, $aesKey);
-        }
-        return false;
+        return self::execute($interfaceCode, $data, $serializer, $type, $aesKey);
     }
 
     /**
-     * @param $tin
-     * @param $deviceNo
      * @return bool|string
-     * @throws JsonException
      */
     private static function getAESKey(): bool|string
     {
-        $response = self::send(null, "T104", "string", false);
-        if ($response)
-            return $response->data;
-        return $response;
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $aesKey = null;
+        $data = new Data(content: null);
+
+        return self::execute("T104", $data, $serializer, "string", $aesKey);
     }
 
     /**
@@ -207,6 +192,35 @@ class Util
             $response->data(Util::json_deserialize($payload->data->content, $type));
 
         return $response;
+    }
+
+    /**
+     * @param string $interfaceCode
+     * @param Data $data
+     * @param Serializer $serializer
+     * @param $type
+     * @param bool|string|null $aesKey
+     * @return false|Response
+     */
+    public static function execute(string $interfaceCode, Data $data, Serializer $serializer, $type, bool|string|null $aesKey): false|Response
+    {
+        $globalInfo = new GlobalInfo(self::$tin, self::$deviceNo, $interfaceCode);
+        $payload = new Payload(globalInfo: $globalInfo, data: $data); //::build()->data($data)->globalInfo($globalInfo);
+
+        $curl = curl_init("https://efristest.ura.go.ug/efrisws/ws/taapp/getInformation");
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $serializer->serialize($payload, 'json'));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        if ($response) {
+            $payload = $serializer->deserialize($response, Payload::class, 'json');
+            // self::json_deserialize($response, Payload::class);
+            return self::extractResponse($payload, $type, $aesKey);
+        }
+        return false;
     }
 
 
