@@ -44,10 +44,6 @@ class Util
      */
     public static function send(mixed $content, string $interfaceCode, $type, bool $encrypt = true): Response|bool
     {
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
-
         $aesKey = null;
         $data = new Data(content: $content);
         if ($encrypt) {
@@ -57,7 +53,7 @@ class Util
         if (!is_null($data->content)) {
             $data->sign();
         }
-        return self::execute($interfaceCode, $data, $serializer, $type, $aesKey);
+        return self::execute($interfaceCode, $data, $type, $aesKey);
     }
 
     /**
@@ -65,14 +61,9 @@ class Util
      */
     private static function getAESKey(): bool|string
     {
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
-
         $aesKey = null;
-        $data = new Data(content: null);
-
-        return self::execute("T104", $data, $serializer, "string", $aesKey);
+        $data = new Data(content: "");
+        return self::execute("T104", $data, "string", $aesKey);
     }
 
     /**
@@ -202,8 +193,12 @@ class Util
      * @param bool|string|null $aesKey
      * @return false|Response
      */
-    public static function execute(string $interfaceCode, Data $data, Serializer $serializer, $type, bool|string|null $aesKey): false|Response
+    public static function execute(string $interfaceCode, Data $data, $type, bool|string|null $aesKey): false|Response
     {
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
         $globalInfo = new GlobalInfo(self::$tin, self::$deviceNo, $interfaceCode);
         $payload = new Payload(globalInfo: $globalInfo, data: $data); //::build()->data($data)->globalInfo($globalInfo);
 
