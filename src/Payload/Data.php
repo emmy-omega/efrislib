@@ -4,8 +4,10 @@ namespace Sniper\EfrisLib\Payload;
 
 
 use JsonSerializable;
+use PHPUnit\Framework\Constraint\IsInstanceOf;
 use Sniper\EfrisLib\Builder;
 use Sniper\EfrisLib\Crypto;
+use function PHPUnit\Framework\isInstanceOf;
 
 class Data implements JsonSerializable
 {
@@ -69,7 +71,7 @@ class Data implements JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return ['content' => $this->content, 'signature' => $this->signature, 'dataDescription' => $this->dataDescription->jsonSerialize()];
+        return ['content' => is_string($this->content) ? "" : $this->content->jsonSerialize() , 'signature' => $this->signature, 'dataDescription' => $this->dataDescription->jsonSerialize()];
     }
 
     public static function fromJson(array $json): self

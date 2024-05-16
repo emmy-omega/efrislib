@@ -53,7 +53,7 @@ class Util
         if (!is_null($data->content)) {
             $data->sign();
         }
-        return self::execute($interfaceCode, $data, $type, $aesKey);
+        return self::post($interfaceCode, $data, $type, $aesKey);
     }
 
     /**
@@ -63,7 +63,7 @@ class Util
     {
         $aesKey = null;
         $data = new Data(content: "");
-        return self::execute("T104", $data, "string", $aesKey);
+        return self::post("T104", $data, "string", $aesKey);
     }
 
     /**
@@ -193,7 +193,7 @@ class Util
      * @param bool|string|null $aesKey
      * @return false|Response
      */
-    public static function execute(string $interfaceCode, Data $data, $type, bool|string|null $aesKey): false|Response
+    public static function post(string $interfaceCode, Data $data, $type, bool|string|null $aesKey): false|Response
     {
         $encoders = [new JsonEncoder()];
         $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
