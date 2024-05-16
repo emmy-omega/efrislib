@@ -7,7 +7,7 @@ use JsonSerializable;
 use Sniper\EfrisLib\Builder;
 use Sniper\EfrisLib\Crypto;
 
-class Data extends Builder implements JsonSerializable
+class Data implements JsonSerializable
 {
     public function __construct(public mixed $content=null, public string $signature = "", public DataDescription $dataDescription=new DataDescription())
     {

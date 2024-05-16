@@ -33,11 +33,11 @@ class Payload implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        return ['data' => $this->data, 'globalInfo' => $this->globalInfo, 'returnStateInfo' => $this->returnStateInfo];
+        return ['data' => $this->data->jsonSerialize(), 'globalInfo' => $this->globalInfo->jsonSerialize(), 'returnStateInfo' => $this->returnStateInfo->jsonSerialize()];
     }
 
     public  static function fromJson(array $json): Payload
     {
-        return new self($json['data'], $json['globalInfo'], $json['returnStateInfo']);
+        return new self(GlobalInfo::fromJson($json['globalInfo']), ReturnStateInfo::fromJson($json['returnStateInfo']), Data::fromJson($json['data']));
     }
 }
