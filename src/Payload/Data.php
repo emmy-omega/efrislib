@@ -9,7 +9,7 @@ use Sniper\EfrisLib\Crypto;
 
 class Data implements JsonSerializable
 {
-    public function __construct(public ?string $content=null, public string $signature = "", public DataDescription $dataDescription=new DataDescription())
+    public function __construct(public mixed $content=null, public string $signature = "", public DataDescription $dataDescription=new DataDescription())
     {
     }
 
