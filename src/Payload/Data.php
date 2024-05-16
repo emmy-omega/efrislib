@@ -71,7 +71,7 @@ class Data implements JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return ['content' => is_string($this->content) ? "" : $this->content->jsonSerialize() , 'signature' => $this->signature, 'dataDescription' => $this->dataDescription->jsonSerialize()];
+        return ['content' => (is_null($this->content) ? null : is_string($this->content)) ? $this->content : $this->content->jsonSerialize(), 'signature' => $this->signature, 'dataDescription' => $this->dataDescription->jsonSerialize()];
     }
 
     public static function fromJson(array $json): self
