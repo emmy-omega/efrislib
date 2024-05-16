@@ -10,6 +10,7 @@ use Sniper\EfrisLib\Invoicing\CreditNote\CreditNoteQuery;
 use Sniper\EfrisLib\Invoicing\Invoice;
 use Sniper\EfrisLib\Invoicing\InvoiceQuery;
 use Sniper\EfrisLib\Misc\Enums\TaxpayerType;
+use Sniper\EfrisLib\Misc\Normalizers\TaxpayerTypeNormalizer;
 use Sniper\EfrisLib\Misc\TaxpayerInfo;
 use Sniper\EfrisLib\Payload\Data;
 use Sniper\EfrisLib\Payload\GlobalInfo;
@@ -61,7 +62,7 @@ class Util
         $response = curl_exec($curl);
         curl_close($curl);
         if ($response) {
-            $payload = Util::customJsonDecode($response);//self::json_deserialize($response, Payload::class);
+            $payload = self::json_deserialize($response, Payload::class);
             return self::extractResponse($payload, $type, $aesKey);
         }
         return false;
@@ -88,7 +89,7 @@ class Util
     public static function json_deserialize(string $json, string $type): mixed
     {
         $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor())];
+        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
         if ($type == "array")
             return $serializer->decode($json, 'json');
