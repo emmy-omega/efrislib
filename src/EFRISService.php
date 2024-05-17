@@ -81,7 +81,7 @@ class EFRISService
     private function json_deserialize(string $json, string $type): mixed
     {
         if ($type == "array")
-            return $this->serializer->decode($json, 'json');
+            return $this->serializer->deserialize($json, $type,'json');
         return $this->serializer->deserialize($json, $type, 'json',
             [AbstractObjectNormalizer::SKIP_NULL_VALUES, AbstractObjectNormalizer::SKIP_UNINITIALIZED_VALUES]);
     }
