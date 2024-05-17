@@ -186,6 +186,7 @@ class EFRISService
             }
             return $response;
         }
+        var_dump($payload);
         if (gettype($payload->data->content) == "string" and empty($payload->data->content))
             $response->data($payload->data->content);
         else
