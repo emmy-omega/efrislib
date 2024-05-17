@@ -15,7 +15,7 @@ class Taxpayer implements JsonSerializable
         public string       $contactNumber,
         public string       $contactEmail,
         public string       $address,
-        public TaxpayerType $taxpayerType,
+        public string $taxpayerType,
         public string       $governmentTIN)
     {
     }
@@ -91,16 +91,6 @@ class Taxpayer implements JsonSerializable
     }
 
     /**
-     * @param TaxpayerType $taxpayerType
-     * @return Taxpayer
-     */
-    public function taxpayerType(TaxpayerType $taxpayerType): Taxpayer
-    {
-        $this->taxpayerType = $taxpayerType;
-        return $this;
-    }
-
-    /**
      * @param string $governmentTIN
      * @return Taxpayer
      */
@@ -120,13 +110,13 @@ class Taxpayer implements JsonSerializable
             'contactNumber' => $this->contactNumber,
             'contactEmail' => $this->contactEmail,
             '$address' => $this->address,
-            'taxpayerType' => $this->taxpayerType->jsonSerialize(),
+            'taxpayerType' => $this->taxpayerType,
             'governmentTIN' => $this->governmentTIN,
         ];
     }
 
     public static function fromJson(array $jsonData): self
     {
-        return new self($jsonData['tin'], $jsonData['ninBrn'], $jsonData['legalName'], $jsonData['businessName'], $jsonData['contactNumber'], $jsonData['contactEmail'], $jsonData['address'], TaxpayerType::fromJson($jsonData['taxpayerType']), $jsonData['governmentTIN']);
+        return new self($jsonData['tin'], $jsonData['ninBrn'], $jsonData['legalName'], $jsonData['businessName'], $jsonData['contactNumber'], $jsonData['contactEmail'], $jsonData['address'], $jsonData['taxpayerType'], $jsonData['governmentTIN']);
     }
 }
