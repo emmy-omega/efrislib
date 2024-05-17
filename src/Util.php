@@ -89,15 +89,6 @@ class Util
     {
         $encoders = [new JsonEncoder()];
         $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
-
-        // Add the circular reference handler
-        foreach ($normalizers as $normalizer) {
-            if ($normalizer instanceof ObjectNormalizer) {
-                $normalizer->setCircularReferenceHandler(function ($object) {
-                    return $object->getId(); // Or any other unique identifier for the object
-            });
-        }
-        }
         $serializer = new Serializer($normalizers, $encoders);
 
         return $serializer->serialize($data, 'json');
