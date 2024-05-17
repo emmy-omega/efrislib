@@ -15,32 +15,6 @@ class Data implements JsonSerializable
     {
     }
 
-    /**
-     * @param string $content
-     * @return $this
-     */
-    public function content(string $content=""): Data
-    {
-        $this->content = $content;
-        return $this;
-    }
-
-    /**
-     * @param string $signature
-     * @return $this
-     */
-    public function signature(string $signature=""): Data
-    {
-        $this->signature = $signature;
-        return $this;
-    }
-    public function dataDescription(DataDescription $dataDescription=new DataDescription()): Data
-    {
-        $this->dataDescription = $dataDescription;
-        return $this;
-    }
-
-
     public function sign(): Data
     {
         $signed = Crypto::rsaSign($this->content);
@@ -56,7 +30,8 @@ class Data implements JsonSerializable
     public function encrypt(string $aesKey): Data
     {
         $this->content = Crypto::aesEncrypt($this->content, $aesKey);
-        $this->dataDescription->codeType("1")->encryptCode("2");
+        $this->dataDescription->codeType = "1";
+        $this->dataDescription->encryptCode = "2";
         return $this;
     }
 
