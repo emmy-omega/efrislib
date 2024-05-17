@@ -77,9 +77,7 @@ class Util
     public static function json_deserialize(string $json, string $type): mixed
     {
         $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor(), defaultContext: [AbstractObjectNormalizer::CIRCULAR_REFERENCE_HANDLER=>function ($object) {
-            return $object->getId();
-        }]), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
+        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
         if ($type == "array")
             return $serializer->decode($json, 'json');
@@ -90,9 +88,16 @@ class Util
     public static function json_serialize(mixed $data): string
     {
         $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor(), defaultContext: [AbstractObjectNormalizer::CIRCULAR_REFERENCE_HANDLER=>function ($object) {
-            return $object->getId();
-        }]), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
+        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
+
+        // Add the circular reference handler
+        foreach ($normalizers as $normalizer) {
+            if ($normalizer instanceof ObjectNormalizer) {
+                $normalizer->setCircularReferenceHandler(function ($object) {
+                    return $object->getId(); // Or any other unique identifier for the object
+            });
+        }
+        }
         $serializer = new Serializer($normalizers, $encoders);
 
         return $serializer->serialize($data, 'json');
