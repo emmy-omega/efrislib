@@ -26,5 +26,12 @@
     },
     "require-dev": {
         "phpunit/phpunit": "10.0.18"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sniper\\EfrisLib\\Providers\\SerializerServiceProvider"
+            ]
+        }
     }
 }

@@ -11,6 +11,7 @@ use Sniper\EfrisLib\Invoicing\Invoice;
 use Sniper\EfrisLib\Invoicing\InvoiceQuery;
 use Sniper\EfrisLib\Misc\Enums\TaxpayerType;
 use Sniper\EfrisLib\Misc\Normalizers\TaxpayerTypeNormalizer;
+use Sniper\EfrisLib\Misc\SerializerFactory;
 use Sniper\EfrisLib\Misc\TaxpayerInfo;
 use Sniper\EfrisLib\Payload\Data;
 use Sniper\EfrisLib\Payload\GlobalInfo;
@@ -36,6 +37,8 @@ class Util
     public static string $timeZone;
     public static string $tin;
     public static string $deviceNo;
+
+    protected Serializer $serializer;
 
     /**
      * @param mixed $content
@@ -66,7 +69,7 @@ class Util
     {
         $aesKey = null;
         $data = new Data(content: "");
-        return self::post("T104", $data, "string", $aesKey);
+        return self::post("T104", $data, "string", $aesKey)->data;
     }
 
     /**
@@ -76,9 +79,7 @@ class Util
      */
     public static function json_deserialize(string $json, string $type): mixed
     {
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
+        $serializer = SerializerFactory::create();
         if ($type == "array")
             return $serializer->decode($json, 'json');
         return $serializer->deserialize($json, $type, 'json',
@@ -87,9 +88,7 @@ class Util
 
     public static function json_serialize(mixed $data): string
     {
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
+        $serializer = SerializerFactory::create();
 
         return $serializer->serialize($data, 'json');
     }
