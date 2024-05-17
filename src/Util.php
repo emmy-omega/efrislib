@@ -47,7 +47,7 @@ class Util
         $aesKey = null;
         $data = new Data();
         if (!is_null($content)) {
-            $data->content(self::json_serialize($content));
+            $data->content = self::json_serialize($content);
         }
         if ($encrypt) {
             $aesKey = self::getAESKey();
