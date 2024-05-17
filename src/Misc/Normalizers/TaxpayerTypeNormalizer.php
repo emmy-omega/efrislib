@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class TaxpayerTypeNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = []): ?string
     {
         if (!$object instanceof TaxpayerType) {
             return null;
@@ -38,5 +38,12 @@ class TaxpayerTypeNormalizer implements NormalizerInterface, DenormalizerInterfa
     public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
     {
         return $type === TaxpayerType::class;
+    }
+
+    public function getSupportedTypes($format): array
+    {
+        return [
+            TaxpayerType::class => true,
+        ];
     }
 }
