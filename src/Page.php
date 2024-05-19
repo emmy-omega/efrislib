@@ -2,56 +2,26 @@
 
 namespace Sniper\EfrisLib;
 
-class Page
+use JsonSerializable;
+
+class Page implements JsonSerializable
 {
-    public int $pageNo;
-    public int $pageSize;
-    public int $totalSize;
-    public int $pageCount;
+    public function __construct(
+    public int $pageNo,
+    public int $pageSize,
+    public int $totalSize,
+    public int $pageCount) {}
 
-    public static function build(): self
+    public function jsonSerialize(): array
     {
-        return new self();
+        return [
+            'pageNo' => $this->pageNo, 'pageSize' => $this->pageSize, 'totalSize' => $this->totalSize,
+            'pageCount' => $this->pageCount];
     }
 
-    /**
-     * @param string $pageNo
-     * @return Page
-     */
-    public function pageNo(string $pageNo): Page
+    public static function fromJson(array $jsonData): self
     {
-        $this->pageNo = $pageNo;
-        return $this;
-    }
-
-    /**
-     * @param string $pageSize
-     * @return Page
-     */
-    public function pageSize(string $pageSize): Page
-    {
-        $this->pageSize = $pageSize;
-        return $this;
-    }
-
-    /**
-     * @param string $totalSize
-     * @return Page
-     */
-    public function totalSize(string $totalSize): Page
-    {
-        $this->totalSize = $totalSize;
-        return $this;
-    }
-
-    /**
-     * @param string $pageCount
-     * @return Page
-     */
-    public function pageCount(string $pageCount): Page
-    {
-        $this->pageCount = $pageCount;
-        return $this;
+        return new self($jsonData['tin'], $jsonData['pageSize'], $jsonData['totalSize'], $jsonData['pageCount']);
     }
 
 

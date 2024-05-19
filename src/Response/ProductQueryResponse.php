@@ -2,6 +2,7 @@
 
 namespace Sniper\EfrisLib\Response;
 
+use Sniper\EfrisLib\Misc\Taxpayer;
 use Sniper\EfrisLib\Page;
 
 class ProductQueryResponse

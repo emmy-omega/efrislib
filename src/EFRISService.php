@@ -129,7 +129,7 @@ class EFRISService
 
     public function queryInvoice(InvoiceQuery $invoiceQuery): Response
     {
-        return $this->send($invoiceQuery, "T106", 'Sniper\EfrisLib\Invoicing\InvoiceQuery[]', true);
+        return $this->send($invoiceQuery, "T106", ProductQueryResponse::class, true);
     }
 
     public function issueCreditNote(CreditNote $creditNote): Response
