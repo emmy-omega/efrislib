@@ -13,7 +13,7 @@ class SerializerFactory
 {
     public static function create(): Serializer
     {
-        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
+        $normalizers = [new ObjectNormalizer(null, null, null, new ReflectionExtractor()), new ArrayDenormalizer(), new TaxpayerTypeNormalizer(), new ArrayDenormalizer()];
         $encoders = [new JsonEncoder()];
 
         return new Serializer($normalizers, $encoders);
