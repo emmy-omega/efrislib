@@ -2,7 +2,9 @@
 
 namespace Sniper\EfrisLib\Invoicing;
 
-class InvoiceQuery
+use JsonSerializable;
+
+class InvoiceQuery implements JsonSerializable
 {
     public function __construct(
         public ?string $oriInvoiceNo = null,
@@ -26,5 +28,17 @@ class InvoiceQuery
         public ?string $dataSource = null,
         public ?string $sellerLegalOrBusinessName = null)
     {
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [$this->oriInvoiceNo, $this->invoiceNo, $this->deviceNo, $this->buyerTin, $this->buyerNinBrn, $this->buyerLegalName, $this->combineKeywords, $this->invoiceType, $this->invoiceKind, $this->isInvalid, $this->isRefund, $this->startDate, $this->endDate, $this->pageNo, $this->pageSize, $this->referenceNo, $this->branchName, $this->queryType, $this->dataSource, $this->sellerLegalOrBusinessName];
+    }
+
+    public static function fromJson(array $jsonData): self
+    {
+        return new self($jsonData['oriInvoiceNo'], $jsonData['invoiceNo'], $jsonData['deviceNo'], $jsonData['buyerTin'], $jsonData['buyerNinBrn'], $jsonData['buyerLegalName'], $jsonData['combineKeywords'], $jsonData['invoiceType'], $jsonData['invoiceKind'], $jsonData['isInvalid'], $jsonData['isRefund'], $jsonData['startDate'],
+            $jsonData['endDate'], $jsonData['pageNo'], $jsonData['pageSize'], $jsonData['referenceNo'], $jsonData['branchName'],
+            $jsonData['queryType'], $jsonData['dataSource'], $jsonData['sellerLegalOrBusinessName']);
     }
 }
