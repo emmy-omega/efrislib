@@ -102,7 +102,7 @@ class EFRISService
 
     public function queryProduct(string $pageSize = "10", string $pageNo = "1", $goodName = "", $goodsCode = ""): Response
     {
-        $query = ProductQuery::build()->pageSize($pageSize)->pageNo($pageNo)->goodsName($goodName)->goodsCode($goodsCode);
+        $query = new ProductQuery(pageNo: $pageNo, pageSize: $pageSize);
         return $this->send($query, "T127", ProductQueryResponse::class, true);
     }
 

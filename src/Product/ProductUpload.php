@@ -4,17 +4,12 @@ namespace Sniper\EfrisLib\Product;
 
 use Sniper\EfrisLib\Builder;
 
-class ProductUpload extends Builder
+class ProductUpload
 {
     /**
      * @var array<Product>
      */
     public array $products = array();
-
-    public static function build(): ProductUpload
-    {
-        return new self();
-    }
 
     public function addProducts(Product ...$products): ProductUpload
     {
@@ -25,10 +20,7 @@ class ProductUpload extends Builder
     public function addProduct($operationType, $goodsName, $goodsCode, $measureUnit, $unitPrice, $currency,
                                $commodityCategoryId, $stockPrewarning, $haveExciseTax="102", $havePieceUnit="102"): ProductUpload
     {
-        $product = Product::build()->operationType($operationType)->goodsName($goodsName)->goodsCode($goodsCode)
-            ->measureUnit($measureUnit)->unitPrice($unitPrice)->currency($currency)
-            ->commodityCategoryId($commodityCategoryId)->stockPrewarning($stockPrewarning)->haveExciseTax($haveExciseTax)
-            ->havePieceUnit($havePieceUnit);
+        $product = new Product(goodsName: $goodsName, goodsCode: $goodsCode, measureUnit: $measureUnit, currency: $currency, commodityCategoryId: $commodityCategoryId, unitPrice: $unitPrice);
         $this->products[] = $product;
         return $this;
     }

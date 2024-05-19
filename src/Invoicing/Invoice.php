@@ -6,43 +6,22 @@ use Sniper\EfrisLib\Payload\Data;
 
 class Invoice
 {
-    public SellerDetails $sellerDetails;
-    public BasicInformation $basicInformation;
-    public BuyerDetails $buyerDetails;
-    public BuyerExtend $buyerExtend;
-
-    public Summary $summary;
-    /**
-     * @var array<GoodsDetails>
-     */
-    public array $goodsDetails = array();
-    /**
-     * @var array<TaxDetails>
-     */
-    public array $taxDetails = array();
-    /**
-     * @var array<PayWay>
-     */
-    public array $payWay = array();
-    public Extend $extend;
-    public ImportServiceSeller $importServiceSeller;
-    public array $airLineGoodsDetails;
-    public array $edcDetails;
-
-    public static function build(): Invoice
+    public function __construct(
+        public SellerDetails       $sellerDetails,
+        public BasicInformation    $basicInformation,
+        public BuyerDetails        $buyerDetails,
+        public BuyerExtend         $buyerExtend,
+        public Summary             $summary,
+        public Extend              $extend,
+        public ImportServiceSeller $importServiceSeller,
+        public array               $airLineGoodsDetails,
+        public array               $edcDetails,
+        public array               $goodsDetails = array(),
+        public array               $taxDetails = array(),
+        public array               $payWay = array(),)
     {
-        return new self();
     }
 
-    /**
-     * @param Summary $summary
-     * @return Invoice
-     */
-    public function summary(Summary $summary): Invoice
-    {
-        $this->summary = $summary;
-        return $this;
-    }
 
     /**
      * @param string $legalName
@@ -53,8 +32,7 @@ class Invoice
      */
     public function buyerDetails(string $legalName, string $email, string $buyerType = "1", string $tin = ""): Invoice
     {
-        $this->buyerDetails = BuyerDetails::builder()->buyerLegalName($legalName)
-            ->buyerEmail($email)->buyerType($buyerType)->buyerTin($tin);
+        $this->buyerDetails = new BuyerDetails($legalName, $email, $buyerType, $tin);
         return $this;
     }
 
@@ -67,14 +45,13 @@ class Invoice
      */
     public function sellerDetails(string $tin, string $legalName, string $emailAddress, string $branchId): Invoice
     {
-        $this->sellerDetails = SellerDetails::builder()->tin($tin)->legalName($legalName)
-            ->emailAddress($emailAddress)->branchId($branchId);
+        $this->sellerDetails = new SellerDetails(tin: $tin, legalName: $legalName,emailAddress: $emailAddress);
         return $this;
     }
 
     /**
      * @param string $deviceNo
-     * @param string $issueDate
+     * @param string $issuedDate
      * @param string $operator
      * @param string $invoiceType
      * @param string $invoiceKind
@@ -83,31 +60,26 @@ class Invoice
      */
     public function basicInformation(string $deviceNo, string $issuedDate, string $operator, string $invoiceType, string $invoiceKind, string $dataSource): Invoice
     {
-        $this->basicInformation = BasicInformation::builder()->deviceNo($deviceNo)->issuedDate($issuedDate)
-            ->operator($operator)->invoiceType($invoiceType)->invoiceKind($invoiceKind)->dataSource($dataSource);
+        $this->basicInformation = new BasicInformation(deviceNo: $deviceNo,issuedDate: $issuedDate, operator: $operator);
         return $this;
     }
 
     public function addGoodDetails(string $item, string $itemCode, string $qty, string $unitPrice, string $total, string $unitOfMeasure, string $taxRate, string $tax,
                                    string $orderNumber, string $discountFlag, string $exciseFlag, string $goodsCategoryId): Invoice
     {
-        $this->goodsDetails[] = GoodsDetails::builder()->item($item)->itemCode($itemCode)->qty($qty)->unitPrice($unitPrice)->total($total)
-            ->unitOfMeasure($unitOfMeasure)
-            ->taxRate($taxRate)->tax($tax)->orderNumber($orderNumber)->discountFlag($discountFlag)->exciseFlag($exciseFlag)
-            ->goodsCategoryId($goodsCategoryId);
+        $this->goodsDetails[] = new GoodsDetails(item: $item, itemCode: $item, total: $total, tax: $tax, goodsCategoryId: $goodsCategoryId, taxRate: $taxRate, qty: $qty, unitOfMeasure: $unitOfMeasure, unitPrice: $unitPrice);
         return $this;
     }
 
     public function addTaxDetails(string $taxCategoryCode, string $grossAmount, string $taxAmount, string $netAmount, string $taxRate): Invoice
     {
-        $this->taxDetails[] = TaxDetails::builder()->taxCategoryCode($taxCategoryCode)->grossAmount($grossAmount)
-            ->taxAmount($taxAmount)->netAmount($netAmount)->taxRate($taxRate);
+        $this->taxDetails[] = new TaxDetails(netAmount: $netAmount, taxAmount: $taxAmount, grossAmount: $grossAmount, taxCategoryCode: $taxCategoryCode, taxRate: $taxRate);;
         return $this;
     }
 
     public function addPayWay(string $paymentMode, string $paymentAmount, string $orderNumber): Invoice
     {
-        $this->payWay[] = PayWay::builder()->paymentMode($paymentMode)->paymentAmount($paymentAmount)->orderNumber($orderNumber);
+        $this->payWay[] = new PayWay(paymentMode: $paymentMode, paymentAmount: $paymentAmount, orderNumber: $orderNumber);
         return $this;
     }
 }

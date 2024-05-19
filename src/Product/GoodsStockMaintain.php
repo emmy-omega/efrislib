@@ -14,7 +14,7 @@ class GoodsStockMaintain
 
     public function __construct($operationType, $supplierName, $stockInType)
     {
-        $this->goodsStockIn(StockIn::build()->operationType($operationType)->supplierName($supplierName)->stockInType($stockInType));
+        $this->goodsStockIn(goodsStockIn: new StockIn(operationType: $operationType, supplierName: $supplierName, stockInType: $stockInType));
     }
 
     public static function build($operationType, $supplierName, $stockInType): GoodsStockMaintain
@@ -44,8 +44,7 @@ class GoodsStockMaintain
 
     public function addGoodsStockInItem($goodsCode, $quantity, $unitPrice, $remarks=""): GoodsStockMaintain
     {
-        $this->goodsStockInItem[] = StockInItem::build()->goodsCode($goodsCode)->quantity($quantity)
-            ->unitPrice($unitPrice)->remarks($remarks);
+        $this->goodsStockInItem[] = new StockInItem(quantity: $quantity, unitPrice: $unitPrice, goodsCode: $goodsCode, remarks: $remarks);
         return $this;
     }
 
