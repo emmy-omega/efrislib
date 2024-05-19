@@ -129,7 +129,7 @@ class EFRISService
 
     public function queryInvoice(InvoiceQuery $invoiceQuery): Response
     {
-        return $this->send($invoiceQuery, "106", 'array', true);
+        return $this->send($invoiceQuery, "T106", 'array', true);
     }
 
     public function issueCreditNote(CreditNote $creditNote): Response
