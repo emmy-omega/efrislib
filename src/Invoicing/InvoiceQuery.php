@@ -5,26 +5,26 @@ namespace Sniper\EfrisLib\Invoicing;
 class InvoiceQuery
 {
     public function __construct(
-        public string $oriInvoiceNo,
-        public string $invoiceNo,
-        public string $deviceNo,
-        public string $buyerTin,
-        public string $buyerNinBrn,
-        public string $buyerLegalName,
-        public string $combineKeywords,
-        public string $invoiceType,
-        public string $invoiceKind,
-        public string $isInvalid,
-        public string $isRefund,
-        public string $startDate,
-        public string $endDate,
-        public string $pageNo,
-        public string $pageSize,
-        public string $referenceNo,
-        public string $branchName,
-        public string $queryType,
-        public string $dataSource,
-        public string $sellerLegalOrBusinessName)
+        public ?string $oriInvoiceNo = null,
+        public ?string $invoiceNo = null,
+        public ?string $deviceNo = null,
+        public ?string $buyerTin = null,
+        public ?string $buyerNinBrn = null,
+        public ?string $buyerLegalName = null,
+        public ?string $combineKeywords = null,
+        public ?string $invoiceType = null,
+        public ?string $invoiceKind = null,
+        public ?string $isInvalid = null,
+        public ?string $isRefund = null,
+        public ?string $startDate = null,
+        public ?string $endDate = null,
+        public string  $pageNo = "1",
+        public string  $pageSize = "10",
+        public ?string $referenceNo = null,
+        public ?string $branchName = null,
+        public ?string $queryType = null,
+        public ?string $dataSource = null,
+        public ?string $sellerLegalOrBusinessName = null)
     {
     }
 }
