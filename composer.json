@@ -16,7 +16,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "illuminate/support": "v11.0.0",
+        "illuminate/support": "v10.0.0",
         "ext-openssl": "*",
         "ext-dom": "*",
         "tcdent/php-restclient": "0.1.8.2",
