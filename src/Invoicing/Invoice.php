@@ -12,7 +12,7 @@ class Invoice
         public BuyerDetails        $buyerDetails,
         public Summary             $summary,
         public Extend              $extend,
-        public array               $airLineGoodsDetails,
+        public array               $airLineGoodsDetails=[],
         public array               $edcDetails=[],
         public ?ImportServiceSeller $importServiceSeller=null,
         public ?BuyerExtend         $buyerExtend=null,
