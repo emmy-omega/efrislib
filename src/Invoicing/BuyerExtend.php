@@ -4,14 +4,14 @@ namespace Sniper\EfrisLib\Invoicing;
 class BuyerExtend
 {
     public function __construct(
-        public string $propertyType,
-        public string $district,
-        public string $municipaltyCounty,
-        public string $divisionSubcounty,
-        public string $town,
-        public string $cellVillage,
-        public string $effectiveRegistrationDate,
-        public string $meterStatus)
+        public ?string $propertyType = null,
+        public ?string $district = null,
+        public ?string $municipaltyCounty = null,
+        public ?string $divisionSubcounty = null,
+        public ?string $town = null,
+        public ?string $cellVillage = null,
+        public ?string $effectiveRegistrationDate = null,
+        public ?string $meterStatus = null)
     {
     }
 }

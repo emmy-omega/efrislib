@@ -7,13 +7,13 @@ use Sniper\EfrisLib\Misc\TaxpayerInfo;
 class ImportServiceSeller
 {
     public function __construct(
-        public string $importBusinessAddress,
-        public string $importEmailAddress,
-        public string $importContactNumber,
-        public string $importAddress,
         public string $importInvoiceDate,
-        public string $importAttachmentName,
-        public string $importAttachmentContent)
+        public ?string $importBusinessAddress=null,
+        public ?string $importEmailAddress=null,
+        public ?string $importContactNumber=null,
+        public ?string $importAddress=null,
+        public ?string $importAttachmentName=null,
+        public ?string $importAttachmentContent=null)
     {
     }
 
