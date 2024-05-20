@@ -208,7 +208,7 @@ class EFRISService
         $globalInfo = new GlobalInfo($this->tin, $this->deviceNo, $interfaceCode);
         $payload = new Payload(globalInfo: $globalInfo, data: $data); //::build()->data($data)->globalInfo($globalInfo);
 
-        $curl = curl_init("https://efristest.ura.go.ug/efrisws/ws/taapp/getInformation");
+        $curl = curl_init("https://efrisws.ura.go.ug/ws/taapp/getInformation");
         curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $this->json_serialize($payload));
