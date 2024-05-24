@@ -169,7 +169,6 @@ class EFRISService
     private function extractResponse(Payload $payload, $type, $aesKey): Response
     {
         $response = Response::builder()->returnStateInfo($payload->returnStateInfo);
-        var_dump($payload);
 //        check encryption stata
         $isEncrypted = $payload->data->dataDescription->codeType == "1";
         $encryptCode = $payload->data->dataDescription->encryptCode;

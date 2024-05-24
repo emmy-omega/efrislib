@@ -25,7 +25,6 @@ class TaxpayerTypeNormalizer implements NormalizerInterface, DenormalizerInterfa
     public function denormalize($data, string $type, string $format = null, array $context = []): TaxpayerType
     {
         if (!is_string($data)) {
-            var_dump($data);
             throw new NotNormalizableValueException();
         }
 
