@@ -135,10 +135,10 @@ class EFRISService
      * @param array $stockTransferItems
      * @return Response
      */
-    public function transferStock(StockTransfer $stockTransfer, /**@var array<StockTransferItem>* */ array $stockTransferItems): Response
+    public function transferStock(StockTransfer $stockTransfer, /** @var array<StockTransferItem> */ array $stockTransferItems): Response
     {
         $data = new GoodsStockTransfer(stockTransfer: $stockTransfer, stockTransferItem: $stockTransferItems);
-        return $this->send($data, "T138", "array", true);
+        return $this->send($data, "T139","array", true);
     }
 
     public function fiscalizeInvoice(Invoice $invoice): Response
@@ -212,9 +212,6 @@ class EFRISService
                 $passowrdDes = base64_decode(json_decode($jsonContent)->passowrdDes);
                 $response->data(base64_decode(Crypto::rsaDecrypt($passowrdDes)));
             } else {
-                if ($payload->returnStateInfo->returnCode != "00") {
-                    throw new EFRISException($payload->returnStateInfo->returnMessage, data: $response->data(self::json_deserialize($jsonContent, 'array')));
-                }
                 $response->data(self::json_deserialize($jsonContent, 'array'));
             }
             return $response;

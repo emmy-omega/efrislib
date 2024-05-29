@@ -8,9 +8,10 @@ class StockTransfer
         public int $sourceBranchId,
         public int $destinationBranchId,
         public string $transferTypeCode,
-        public string $remarks,
-        public string $rollBackIfError,
-        public string $goodsTypeCode,
+        public ?string $remarks,
+        public ?string $rollBackIfError,
+        public ?string $tankId,
+        public ?string $goodsTypeCode,
     )
     {
     }
