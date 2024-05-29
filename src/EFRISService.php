@@ -5,6 +5,7 @@ namespace Sniper\EfrisLib;
 use Exception;
 use JsonException;
 use PhpParser\Node\Scalar\String_;
+use Sniper\EfrisLib\Invoicing\CreditNote\AttachmentList;
 use Sniper\EfrisLib\Invoicing\CreditNote\CancelNote;
 use Sniper\EfrisLib\Invoicing\CreditNote\CreditNote;
 use Sniper\EfrisLib\Invoicing\CreditNote\CreditNoteQuery;
@@ -17,11 +18,14 @@ use Sniper\EfrisLib\Misc\SerializerFactory;
 use Sniper\EfrisLib\Misc\TaxpayerInfo;
 use Sniper\EfrisLib\Payload\Data;
 use Sniper\EfrisLib\Payload\GlobalInfo;
+use Sniper\EfrisLib\Payload\GoodsStockTransfer;
 use Sniper\EfrisLib\Payload\Payload;
 use Sniper\EfrisLib\Product\GoodsStockMaintain;
 use Sniper\EfrisLib\Product\Product;
 use Sniper\EfrisLib\Product\ProductQuery;
 use Sniper\EfrisLib\Product\ProductUpload;
+use Sniper\EfrisLib\Product\StockTransfer;
+use Sniper\EfrisLib\Product\StockTransferItem;
 use Sniper\EfrisLib\Response\Invoice\CreditNote\CreditNoteResponse;
 use Sniper\EfrisLib\Response\Invoice\InvoiceResponse;
 use Sniper\EfrisLib\Response\ProductQueryResponse;
@@ -39,6 +43,7 @@ class EFRISService
     public string $tin;
     public string $deviceNo;
     public ?string $timeZone;
+
     public function __construct(protected Serializer $serializer)
     {
     }
@@ -66,7 +71,7 @@ class EFRISService
             if (!empty($data->content)) {
                 $data->sign();
             }
-                return self::post($interfaceCode, $data, $type, $aesKey);
+            return self::post($interfaceCode, $data, $type, $aesKey);
         } catch (EFRISException $e) {
             return $e->data;
         }
@@ -91,7 +96,7 @@ class EFRISService
     private function json_deserialize(string $json, string $type): mixed
     {
         if ($type == "array")
-            return $this->serializer->deserialize($json, $type,'json');
+            return $this->serializer->deserialize($json, $type, 'json');
         return $this->serializer->deserialize($json, $type, 'json',
             [AbstractObjectNormalizer::SKIP_NULL_VALUES, AbstractObjectNormalizer::SKIP_UNINITIALIZED_VALUES]);
     }
@@ -123,6 +128,17 @@ class EFRISService
     public function manageStock(GoodsStockMaintain $goodsStockMaintain): Response
     {
         return $this->send($goodsStockMaintain, "T131", "array", true);
+    }
+
+    /**
+     * @param StockTransfer $stockTransfer
+     * @param array $stockTransferItems
+     * @return Response
+     */
+    public function transferStock(StockTransfer $stockTransfer, /**@var array<StockTransferItem>* */ array $stockTransferItems): Response
+    {
+        $data = new GoodsStockTransfer(stockTransfer: $stockTransfer, stockTransferItem: $stockTransferItems);
+        return $this->send($data, "T138", "array", true);
     }
 
     public function fiscalizeInvoice(Invoice $invoice): Response
@@ -191,11 +207,14 @@ class EFRISService
             $jsonContent = base64_decode($payload->data->content);
             if ($payload->globalInfo->interfaceCode == "T104") {
                 if ($payload->returnStateInfo->returnCode != "00") {
-                    throw new EFRISException($payload->returnStateInfo->returnMessage, data: self::json_deserialize($jsonContent, 'array'));
+                    throw new EFRISException($payload->returnStateInfo->returnMessage, data: $response->data(""));
                 }
                 $passowrdDes = base64_decode(json_decode($jsonContent)->passowrdDes);
                 $response->data(base64_decode(Crypto::rsaDecrypt($passowrdDes)));
             } else {
+                if ($payload->returnStateInfo->returnCode != "00") {
+                    throw new EFRISException($payload->returnStateInfo->returnMessage, data: $response->data(self::json_deserialize($jsonContent, 'array')));
+                }
                 $response->data(self::json_deserialize($jsonContent, 'array'));
             }
             return $response;
