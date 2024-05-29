@@ -2,6 +2,7 @@
 
 namespace Sniper\EfrisLib;
 
+use Exception;
 use JsonException;
 use PhpParser\Node\Scalar\String_;
 use Sniper\EfrisLib\Invoicing\CreditNote\CancelNote;
@@ -9,6 +10,7 @@ use Sniper\EfrisLib\Invoicing\CreditNote\CreditNote;
 use Sniper\EfrisLib\Invoicing\CreditNote\CreditNoteQuery;
 use Sniper\EfrisLib\Invoicing\Invoice;
 use Sniper\EfrisLib\Invoicing\InvoiceQuery;
+use Sniper\EfrisLib\Misc\EFRISException;
 use Sniper\EfrisLib\Misc\Enums\TaxpayerType;
 use Sniper\EfrisLib\Misc\Normalizers\TaxpayerTypeNormalizer;
 use Sniper\EfrisLib\Misc\SerializerFactory;
@@ -44,6 +46,8 @@ class EFRISService
     /**
      * @param mixed $content
      * @param string $interfaceCode
+     * @param $type
+     * @param bool $encrypt
      * @return Response|bool
      */
     public function send(mixed $content, string $interfaceCode, $type, bool $encrypt = true): Response|bool
@@ -53,18 +57,24 @@ class EFRISService
         if (!is_null($content)) {
             $data->content = self::json_serialize($content);
         }
-        if ($encrypt) {
-            $aesKey = self::getAESKey();
-            $data->encrypt($aesKey);
+        try {
+
+            if ($encrypt) {
+                $aesKey = self::getAESKey();
+                $data->encrypt($aesKey);
+            }
+            if (!empty($data->content)) {
+                $data->sign();
+            }
+                return self::post($interfaceCode, $data, $type, $aesKey);
+        } catch (EFRISException $e) {
+            return $e->data;
         }
-        if (!empty($data->content)) {
-            $data->sign();
-        }
-        return self::post($interfaceCode, $data, $type, $aesKey);
     }
 
     /**
      * @return bool|string
+     * @throws EFRISException
      */
     private function getAESKey(): bool|string
     {
@@ -165,6 +175,7 @@ class EFRISService
      * @param $type
      * @param $aesKey
      * @return Response
+     * @throws EFRISException
      */
     private function extractResponse(Payload $payload, $type, $aesKey): Response
     {
@@ -179,6 +190,9 @@ class EFRISService
         } else {
             $jsonContent = base64_decode($payload->data->content);
             if ($payload->globalInfo->interfaceCode == "T104") {
+                if ($payload->returnStateInfo->returnCode != "00") {
+                    throw new EFRISException($payload->returnStateInfo->returnMessage, data: self::json_deserialize($jsonContent, 'array'));
+                }
                 $passowrdDes = base64_decode(json_decode($jsonContent)->passowrdDes);
                 $response->data(base64_decode(Crypto::rsaDecrypt($passowrdDes)));
             } else {
@@ -200,6 +214,7 @@ class EFRISService
      * @param $type
      * @param bool|string|null $aesKey
      * @return false|Response
+     * @throws EFRISException
      */
     public function post(string $interfaceCode, Data $data, $type, bool|string|null $aesKey): false|Response
     {
