@@ -9,22 +9,25 @@ use Sniper\EfrisLib\Product\StockTransferItem;
 class GoodsStockTransfer
 {
     /**
-     * @param StockTransfer $stockTransfer
-     * @param array $stockTransferItem
+     * @param StockTransfer $goodsStockTransfer
+     * @param array $goodsStockTransferItem
      */
 
     public function __construct(
-        public StockTransfer $stockTransfer,
+        public StockTransfer $goodsStockTransfer,
         /**
          * @var array<AttachmentList>
          */
-        public array $stockTransferItem = array()
+        public array $goodsStockTransferItem = array()
     )
     {
     }
 
-    public function addStockTransferItems(array $stockTransferItem): void
+    /**
+     * @var array<StockTransferItem> $stockTransferItems
+     */
+    public function addStockTransferItems(array $stockTransferItems): void
     {
-            array_push($this->stockTransferItem, ...$stockTransferItem);
+            array_push($this->goodsStockTransferItem, ...$stockTransferItems);
     }
 }
