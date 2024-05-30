@@ -15,7 +15,10 @@ class StockInItem
         public ?string $remarks = null,
         public ?string $fuelTankId = null,
         public ?string $lossQuantity = null,
-        public ?string $originalQuantity = null)
+        public ?string $originalQuantity = null,
+        public ?string $returnCode = null,
+        public ?string $returnMessage = null
+    )
     {
     }
 
