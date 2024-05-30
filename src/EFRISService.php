@@ -24,11 +24,13 @@ use Sniper\EfrisLib\Product\GoodsStockMaintain;
 use Sniper\EfrisLib\Product\Product;
 use Sniper\EfrisLib\Product\ProductQuery;
 use Sniper\EfrisLib\Product\ProductUpload;
+use Sniper\EfrisLib\Product\StockInItem;
 use Sniper\EfrisLib\Product\StockTransfer;
 use Sniper\EfrisLib\Product\StockTransferItem;
+use Sniper\EfrisLib\Response\Invoice\CreditNote\CreditNoteQueryResponse;
 use Sniper\EfrisLib\Response\Invoice\CreditNote\CreditNoteResponse;
 use Sniper\EfrisLib\Response\Invoice\InvoiceResponse;
-use Sniper\EfrisLib\Response\ProductQueryResponse;
+use Sniper\EfrisLib\Response\PagedQueryResponse;
 use Sniper\EfrisLib\Response\Response;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -118,7 +120,7 @@ class EFRISService
     public function queryProduct(string $pageSize = "10", string $pageNo = "1", $goodName = "", $goodsCode = ""): Response
     {
         $query = new ProductQuery(pageNo: $pageNo, pageSize: $pageSize);
-        return $this->send($query, "T127", ProductQueryResponse::class, true);
+        return $this->send($query, "T127", PagedQueryResponse::class, true);
     }
 
     /**
@@ -127,7 +129,7 @@ class EFRISService
      */
     public function manageStock(GoodsStockMaintain $goodsStockMaintain): Response
     {
-        return $this->send($goodsStockMaintain, "T131", "array");
+        return $this->send($goodsStockMaintain, "T131", "Sniper\EfrisLib\Product\StockInItem[]");
     }
 
     /**
@@ -138,7 +140,7 @@ class EFRISService
     public function transferStock(StockTransfer $stockTransfer, array $stockTransferItems): Response
     {
         $data = new GoodsStockTransfer($stockTransfer, $stockTransferItems);
-        return $this->send($data, "T139","StockTransferItem[]");
+        return $this->send($data, "T139","Sniper\EfrisLib\Product\StockTransferItem[]");
     }
 
     public function fiscalizeInvoice(Invoice $invoice): Response
@@ -155,7 +157,7 @@ class EFRISService
 
     public function queryInvoice(InvoiceQuery $invoiceQuery): Response
     {
-        return $this->send($invoiceQuery, "T106", ProductQueryResponse::class);
+        return $this->send($invoiceQuery, "T106", PagedQueryResponse::class);
     }
 
     public function issueCreditNote(CreditNote $creditNote): Response
@@ -165,12 +167,12 @@ class EFRISService
 
     public function queryCreditNote(CreditNoteQuery $creditNoteQuery): Response
     {
-        return $this->send($creditNoteQuery, "T111", 'array');
+        return $this->send($creditNoteQuery, "T111", PagedQueryResponse::class);
     }
 
     public function retrieveCreditNote(string $id): Response
     {
-        return $this->send(array("id" => $id), "T112", 'array');
+        return $this->send(array("id" => $id), "T112", CreditNoteResponse::class);
     }
 
     public function cancelCreditNote(CancelNote $cancelNote): Response
