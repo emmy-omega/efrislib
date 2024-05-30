@@ -4,28 +4,23 @@ namespace Sniper\EfrisLib\Invoicing\CreditNote;
 
 class CreditNoteQuery
 {
-    public string $referenceNo;
-    public string $invoiceNo;
-    public string $oriInvoiceNo;
-    public string $combineKeywords;
-    public string $approveStatus;
-    public string $queryType;
-    public string $invoiceApplyCategoryCode;
-    public string $startDate;
-    public string $endDate;
-    public string $pageNo;
-    public string $pageSize;
-    public string $creditNoteType;
-    public string $branchName;
-    public string $sellerTinOrNin;
-    public string $sellerLegalOrBusinessName;
-
-    public function __construct($pageNo, $pageSize, $queryType)
-    {
-        $this->pageSize = $pageSize;
-        $this->pageNo = $pageNo;
-        $this->queryType = $queryType;
-    }
+    public function __construct(
+    public ?string $referenceNo=null,
+    public ?string $invoiceNo=null,
+    public ?string $oriInvoiceNo=null,
+    public ?string $combineKeywords=null,
+    public ?string $approveStatus=null,
+    public ?string $queryType = '1',
+    public ?string $invoiceApplyCategoryCode=null,
+    public ?string $startDate=null,
+    public ?string $endDate=null,
+    public string $pageNo='1',
+    public string $pageSize='10',
+    public ?string $creditNoteType=null,
+    public ?string $branchName=null,
+    public ?string $sellerTinOrNin=null,
+    public ?string $sellerLegalOrBusinessName=null)
+    {}
 
     public static function build($pageNo, $pageSize, $queryType): CreditNoteQuery
     {
