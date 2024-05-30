@@ -132,12 +132,12 @@ class EFRISService
 
     /**
      * @param StockTransfer $stockTransfer
-     * @param array $stockTransferItems
+     * @param array<StockTransferItem> $stockTransferItems
      * @return Response
      */
-    public function transferStock(StockTransfer $stockTransfer, /** @var array<StockTransferItem> */ array $stockTransferItems): Response
+    public function transferStock(StockTransfer $stockTransfer, array $stockTransferItems): Response
     {
-        $data = new GoodsStockTransfer(stockTransfer: $stockTransfer, stockTransferItem: $stockTransferItems);
+        $data = new GoodsStockTransfer($stockTransfer, $stockTransferItems);
         return $this->send($data, "T139","array", true);
     }
 

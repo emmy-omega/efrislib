@@ -10,13 +10,13 @@ class GoodsStockTransfer
 {
     /**
      * @param StockTransfer $goodsStockTransfer
-     * @param array $goodsStockTransferItem
+     * @param array<StockTransferItem> $goodsStockTransferItem
      */
 
     public function __construct(
         public StockTransfer $goodsStockTransfer,
         /**
-         * @var array<AttachmentList>
+         * @var array<StockTransferItem>
          */
         public array $goodsStockTransferItem = array()
     )
