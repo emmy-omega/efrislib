@@ -18,7 +18,7 @@ class Invoice
         public ?BuyerExtend         $buyerExtend=null,
         public array               $goodsDetails = array(),
         public array               $taxDetails = array(),
-        public array               $payWay = array(),)
+        public array               $payWay = array())
     {
     }
 
