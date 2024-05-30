@@ -55,7 +55,7 @@ class EFRISService
      * @param bool $encrypt
      * @return Response|bool
      */
-    public function send(mixed $content, string $interfaceCode, $type, bool $encrypt = true): Response|bool
+    public function send(mixed $content, string $interfaceCode, string $type, bool $encrypt = true): Response|bool
     {
         $aesKey = null;
         $data = new Data();
@@ -127,7 +127,7 @@ class EFRISService
      */
     public function manageStock(GoodsStockMaintain $goodsStockMaintain): Response
     {
-        return $this->send($goodsStockMaintain, "T131", "array", true);
+        return $this->send($goodsStockMaintain, "T131", "array");
     }
 
     /**
@@ -138,29 +138,29 @@ class EFRISService
     public function transferStock(StockTransfer $stockTransfer, array $stockTransferItems): Response
     {
         $data = new GoodsStockTransfer($stockTransfer, $stockTransferItems);
-        return $this->send($data, "T139","array", true);
+        return $this->send($data, "T139","StockTransferItem[]");
     }
 
     public function fiscalizeInvoice(Invoice $invoice): Response
     {
-        return $this->send($invoice, "T109", InvoiceResponse::class, true);
+        return $this->send($invoice, "T109", InvoiceResponse::class);
     }
 
 
     public function retrieveInvoice(string $invoiceNo): Response
     {
         $query = array("invoiceNo" => $invoiceNo);
-        return $this->send($query, "T108", InvoiceResponse::class, true);
+        return $this->send($query, "T108", InvoiceResponse::class);
     }
 
     public function queryInvoice(InvoiceQuery $invoiceQuery): Response
     {
-        return $this->send($invoiceQuery, "T106", ProductQueryResponse::class, true);
+        return $this->send($invoiceQuery, "T106", ProductQueryResponse::class);
     }
 
     public function issueCreditNote(CreditNote $creditNote): Response
     {
-        return $this->send($creditNote, "T110", CreditNoteResponse::class, true);
+        return $this->send($creditNote, "T110", CreditNoteResponse::class);
     }
 
     public function queryCreditNote(CreditNoteQuery $creditNoteQuery): Response
@@ -193,7 +193,7 @@ class EFRISService
      * @return Response
      * @throws EFRISException
      */
-    private function extractResponse(Payload $payload, $type, $aesKey): Response
+    private function extractResponse(Payload $payload, string $type, $aesKey): Response
     {
         $response = Response::builder()->returnStateInfo($payload->returnStateInfo);
 //        check encryption stata
@@ -232,7 +232,7 @@ class EFRISService
      * @return false|Response
      * @throws EFRISException
      */
-    public function post(string $interfaceCode, Data $data, $type, bool|string|null $aesKey): false|Response
+    public function post(string $interfaceCode, Data $data, string $type, bool|string|null $aesKey): false|Response
     {
 
         $globalInfo = new GlobalInfo($this->tin, $this->deviceNo, $interfaceCode);
