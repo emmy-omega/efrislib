@@ -9,9 +9,9 @@ class StockTransfer
         public string $destinationBranchId,
         public string $transferTypeCode,
         public ?string $remarks=null,
-        public ?string $rollBackIfError=null,
+        public ?string $rollBackIfError='1',
         public ?string $tankId=null,
-        public ?string $goodsTypeCode=null,
+        public ?string $goodsTypeCode='101',
     )
     {
     }
