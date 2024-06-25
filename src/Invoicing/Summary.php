@@ -11,7 +11,7 @@ class Summary
         public string $taxAmount,
         public string $grossAmount,
         public string $itemCount,
-        public string $qrCode,
+        public ?string $qrCode='',
         public string $modeCode = "1",
     )
     {
