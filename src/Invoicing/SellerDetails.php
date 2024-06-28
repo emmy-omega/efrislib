@@ -16,4 +16,15 @@ class SellerDetails
     public ?string $referenceNo=null,
     public ?string $branchId=null,
     public ?string $isCheckReference=null) {}
+
+    public static function fromArray(array $data): SellerDetails
+    {
+        $invoice = new self();
+        foreach ($data as $key => $value) {
+            if (property_exists($invoice, $key)) {
+                $invoice->$key = $value;
+            }
+        }
+        return $invoice;
+    }
 }
