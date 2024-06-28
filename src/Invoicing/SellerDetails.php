@@ -4,9 +4,9 @@ namespace Sniper\EfrisLib\Invoicing;
 class SellerDetails
 {
     public function __construct(
-        public string $tin,
-        public string $legalName,
-        public string $emailAddress,
+        public ?string $tin=null,
+        public ?string $legalName=null,
+        public ?string $emailAddress=null,
         public ?string $ninBrn=null,
         public ?string $businessName=null,
         public ?string $address=null,

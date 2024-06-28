@@ -40,4 +40,22 @@ class Invoice
         $this->payWay[] = new PayWay(paymentMode: $paymentMode, paymentAmount: $paymentAmount, orderNumber: $orderNumber);
         return $this;
     }
+
+    public static function fromArray(array $data): Invoice
+    {
+        return new self(
+            SellerDetails::fromArray($data['sellerDetails']),
+            BasicInformation::fromArray($data['basicInformation']),
+            BuyerDetails::fromArray($data['buyerDetails']),
+            Summary::fromArray($data['summary']),
+            Extend::fromArray($data['extend']),
+            $data['airLineGoodsDetails'] ?? [],
+            $data['edcDetails'] ?? [],
+            isset($data['importServiceSeller']) ? ImportServiceSeller::fromArray($data['importServiceSeller']) : null,
+            isset($data['buyerExtend']) ? BuyerExtend::fromArray($data['buyerExtend']) : null,
+            $data['goodsDetails'] ?? [],
+            $data['taxDetails'] ?? [],
+            $data['payWay'] ?? []
+        );
+    }
 }

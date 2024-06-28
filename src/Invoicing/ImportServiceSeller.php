@@ -17,4 +17,15 @@ class ImportServiceSeller
     {
     }
 
+    public static function fromArray(array $data): ImportServiceSeller
+    {
+        $invoice = new self();
+        foreach ($data as $key => $value) {
+            if (property_exists($invoice, $key)) {
+                $invoice->$key = $value;
+            }
+        }
+        return $invoice;
+    }
+
 }

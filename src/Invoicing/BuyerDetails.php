@@ -5,7 +5,7 @@ class BuyerDetails
 {
     public function __construct(
 
-        public string $buyerLegalName,
+        public ?string $buyerLegalName=null,
         public ?string $buyerTin = null,
         public ?string $buyerNinBrn = null,
         public ?string $buyerPassport = null,
@@ -20,6 +20,17 @@ class BuyerDetails
         public ?string $buyerReferenceNo = null,
         public string $buyerType = "1")
     {
+    }
+
+    public static function fromArray(array $data): BuyerDetails
+    {
+        $invoice = new self();
+        foreach ($data as $key => $value) {
+            if (property_exists($invoice, $key)) {
+                $invoice->$key = $value;
+            }
+        }
+        return $invoice;
     }
 
 

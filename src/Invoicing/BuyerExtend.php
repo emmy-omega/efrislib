@@ -14,4 +14,15 @@ class BuyerExtend
         public ?string $meterStatus = null)
     {
     }
+
+    public static function fromArray(array $data): BuyerExtend
+    {
+        $invoice = new self();
+        foreach ($data as $key => $value) {
+            if (property_exists($invoice, $key)) {
+                $invoice->$key = $value;
+            }
+        }
+        return $invoice;
+    }
 }
