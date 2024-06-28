@@ -44,15 +44,15 @@ class Invoice
     public static function fromArray(array $data): Invoice
     {
         return new self(
-            SellerDetails::fromArray($data['sellerDetails']),
-            BasicInformation::fromArray($data['basicInformation']),
-            BuyerDetails::fromArray($data['buyerDetails']),
-            Summary::fromArray($data['summary']),
-            Extend::fromArray($data['extend']),
+            SellerDetails::fromArray((array) json_decode($data['sellerDetails'])),
+            BasicInformation::fromArray((array) json_decode($data['basicInformation'])),
+            BuyerDetails::fromArray((array) json_decode($data['buyerDetails'])),
+            Summary::fromArray((array) json_decode($data['summary'])),
+            Extend::fromArray((array) json_decode($data['extend'])),
             $data['airLineGoodsDetails'] ?? [],
             $data['edcDetails'] ?? [],
-            isset($data['importServiceSeller']) ? ImportServiceSeller::fromArray($data['importServiceSeller']) : null,
-            isset($data['buyerExtend']) ? BuyerExtend::fromArray($data['buyerExtend']) : null,
+            isset($data['importServiceSeller']) ? ImportServiceSeller::fromArray((array) json_decode($data['importServiceSeller'])) : null,
+            isset($data['buyerExtend']) ? BuyerExtend::fromArray((array) json_decode($data['buyerExtend'])) : null,
             $data['goodsDetails'] ?? [],
             $data['taxDetails'] ?? [],
             $data['payWay'] ?? []
