@@ -2,9 +2,10 @@
 
 namespace Sniper\EfrisLib\Invoicing;
 
+use Sniper\EfrisLib\BaseModel;
 use Sniper\EfrisLib\Misc\TaxpayerInfo;
 
-class Summary
+class Summary extends BaseModel
 {
     public function __construct(
         public ?string $netAmount=null,
@@ -17,15 +18,15 @@ class Summary
     {
     }
 
-    public static function fromArray(array $data): Summary
-    {
-        $invoice = new self();
-        foreach ($data as $key => $value) {
-            if (property_exists($invoice, $key)) {
-                $invoice->$key = $value;
-            }
-        }
-        return $invoice;
-    }
+//    public static function fromArray(array $data): Summary
+//    {
+//        $invoice = new self();
+//        foreach ($data as $key => $value) {
+//            if (property_exists($invoice, $key)) {
+//                $invoice->$key = $value;
+//            }
+//        }
+//        return $invoice;
+//    }
 
 }

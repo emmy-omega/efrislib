@@ -1,7 +1,9 @@
 <?php
 
 namespace Sniper\EfrisLib\Invoicing;
-class BasicInformation
+use Sniper\EfrisLib\BaseModel;
+
+class BasicInformation extends BaseModel
 {
     public function __construct(
         public ?string $deviceNo=null,
@@ -20,14 +22,14 @@ class BasicInformation
     {
     }
 
-    public static function fromArray(array $data): BasicInformation
-    {
-        $invoice = new self();
-        foreach ($data as $key => $value) {
-            if (property_exists($invoice, $key)) {
-                $invoice->$key = $value;
-            }
-        }
-        return $invoice;
-    }
+//    public static function fromArray(array $data): BasicInformation
+//    {
+//        $invoice = new self();
+//        foreach ($data as $key => $value) {
+//            if (property_exists($invoice, $key)) {
+//                $invoice->$key = $value;
+//            }
+//        }
+//        return $invoice;
+//    }
 }

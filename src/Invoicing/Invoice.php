@@ -2,9 +2,10 @@
 
 namespace Sniper\EfrisLib\Invoicing;
 
+use Sniper\EfrisLib\BaseModel;
 use Sniper\EfrisLib\Payload\Data;
 
-class Invoice
+class Invoice extends BaseModel
 {
     public function __construct(
         public SellerDetails       $sellerDetails,
@@ -41,21 +42,21 @@ class Invoice
         return $this;
     }
 
-    public static function fromArray(array $data): Invoice
-    {
-        return new self(
-            SellerDetails::fromArray($data['sellerDetails']),
-            BasicInformation::fromArray($data['basicInformation']),
-            BuyerDetails::fromArray($data['buyerDetails']),
-            Summary::fromArray($data['summary']),
-            Extend::fromArray($data['extend']),
-            $data['airLineGoodsDetails'] ?? [],
-            $data['edcDetails'] ?? [],
-            isset($data['importServiceSeller']) ? ImportServiceSeller::fromArray($data['importServiceSeller']) : null,
-            isset($data['buyerExtend']) ? BuyerExtend::fromArray($data['buyerExtend']) : null,
-            $data['goodsDetails'] ?? [],
-            $data['taxDetails'] ?? [],
-            $data['payWay'] ?? []
-        );
-    }
+//    public static function fromArray(array $data): Invoice
+//    {
+//        return new self(
+//            SellerDetails::fromArray($data['sellerDetails']),
+//            BasicInformation::fromArray($data['basicInformation']),
+//            BuyerDetails::fromArray($data['buyerDetails']),
+//            Summary::fromArray($data['summary']),
+//            Extend::fromArray($data['extend']),
+//            $data['airLineGoodsDetails'] ?? [],
+//            $data['edcDetails'] ?? [],
+//            isset($data['importServiceSeller']) ? ImportServiceSeller::fromArray($data['importServiceSeller']) : null,
+//            isset($data['buyerExtend']) ? BuyerExtend::fromArray($data['buyerExtend']) : null,
+//            $data['goodsDetails'] ?? [],
+//            $data['taxDetails'] ?? [],
+//            $data['payWay'] ?? []
+//        );
+//    }
 }
