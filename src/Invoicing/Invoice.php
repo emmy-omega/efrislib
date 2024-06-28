@@ -8,11 +8,11 @@ use Sniper\EfrisLib\Payload\Data;
 class Invoice extends BaseModel
 {
     public function __construct(
-        public SellerDetails       $sellerDetails,
-        public BasicInformation    $basicInformation,
-        public BuyerDetails        $buyerDetails,
-        public Summary             $summary,
-        public Extend              $extend,
+        public ?SellerDetails       $sellerDetails = new SellerDetails(),
+        public ?BasicInformation    $basicInformation = new BasicInformation(),
+        public ?BuyerDetails        $buyerDetails = new BuyerDetails(),
+        public ?Summary             $summary  = new Summary(),
+        public ?Extend              $extend  = new Extend(),
         public array               $airLineGoodsDetails=[],
         public array               $edcDetails=[],
         public ?ImportServiceSeller $importServiceSeller=null,
