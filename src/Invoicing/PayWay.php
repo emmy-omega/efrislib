@@ -2,7 +2,10 @@
 
 namespace Sniper\EfrisLib\Invoicing;
 
-class PayWay
+use JsonSerializable;
+use Sniper\EfrisLib\BaseModel;
+
+class PayWay extends BaseModel implements JsonSerializable
 {
     public function __construct(
         public string $paymentMode,
@@ -11,4 +14,11 @@ class PayWay
     {
     }
 
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize(): array
+    {
+        return [$this->paymentMode, $this->paymentAmount, $this->orderNumber];
+    }
 }

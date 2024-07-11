@@ -24,7 +24,7 @@ class Invoice extends BaseModel
     }
 
     public function addGoodDetails(string $item, string $itemCode, string $qty, string $unitPrice, string $total, string $unitOfMeasure, string $taxRate, string $tax,
-                                   string $orderNumber, string $discountFlag, string $exciseFlag, string $goodsCategoryId): Invoice
+                                   string $orderNumber, string $goodsCategoryId, string $discountFlag=null, string $exciseFlag=null): Invoice
     {
         $this->goodsDetails[] = new GoodsDetails(item: $item, itemCode: $item, total: $total, tax: $tax, goodsCategoryId: $goodsCategoryId, taxRate: $taxRate, qty: $qty, unitOfMeasure: $unitOfMeasure, unitPrice: $unitPrice);
         return $this;

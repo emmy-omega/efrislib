@@ -5,7 +5,7 @@ namespace Sniper\EfrisLib;
 
 abstract class BaseModel
 {
-    public static function fromArray(array $data): self
+    public static function fromJson(array $data): self
     {
         $invoice = new static();
         foreach ($data as $key => $value) {
@@ -18,7 +18,7 @@ abstract class BaseModel
                         }
                     } else {
                         $cls = get_class($invoice->$key);
-                        $invoice->$key = $cls::fromArray($value);
+                        $invoice->$key = $cls::fromJson($value);
                     }
                 } else {
                     $invoice->$key = $value;
